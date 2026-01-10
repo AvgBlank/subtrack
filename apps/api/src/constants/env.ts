@@ -5,6 +5,7 @@ const envSchema = z.object({
   NODE_ENV: z.string().prefault("development"),
   PORT: z.coerce.number().int().prefault(8080),
   APP_ORIGIN: z.url().prefault("http://localhost:3000"),
+  DATABASE_URL: z.string().min(1),
 });
 
 // Validate environment variables against the schema
@@ -17,4 +18,4 @@ if (!success) {
   process.exit(1);
 }
 
-export const { NODE_ENV, PORT, APP_ORIGIN } = data;
+export const { NODE_ENV, PORT, APP_ORIGIN, DATABASE_URL } = data;

@@ -1,0 +1,31 @@
+{
+  "name": "@subtrack/api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start": "bun dist/index.js",
+    "dev": "bun run --hot src/index.ts",
+    "clean": "rm -rf dist/ .turbo/",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "check-types": "tsc --noEmit",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "tsc-alias": "^1.8.16",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@subtrack/eslint-config": "workspace:*",
+    "@subtrack/typescript-config": "workspace:*",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "typescript": "^5.9.3"
+  }
+}

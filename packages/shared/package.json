@@ -1,0 +1,32 @@
+{
+  "name": "@subtrack/shared",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist/ .turbo/",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
+  },
+  "dependencies": {
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@subtrack/typescript-config": "workspace:*",
+    "typescript": "^5.9.3",
+    "prettier": "^3.6.2"
+  },
+  "exports": {
+    "./logging": {
+      "import": "./dist/logging.js",
+      "types": "./dist/logging.d.ts"
+    },
+    "./httpStatusCodes": {
+      "import": "./dist/httpStatusCodes.js",
+      "types": "./dist/httpStatusCodes.d.ts"
+    },
+    "./schemas/auth": {
+      "import": "./dist/schemas/auth.js",
+      "types": "./dist/schemas/auth.d.ts"
+    }
+  }
+}

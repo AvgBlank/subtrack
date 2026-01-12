@@ -8,5 +8,8 @@ export const recurringSummarySchema = () => {
     month: z.coerce.number().min(1).max(12).prefault(currMonth),
     year: z.coerce.number().min(2000).max(currYear).prefault(currYear),
   });
-}
+};
 
+export const canISpendSchema = z.object({
+  amount: z.coerce.number().min(0),
+});

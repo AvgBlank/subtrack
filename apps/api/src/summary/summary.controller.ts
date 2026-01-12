@@ -1,12 +1,18 @@
 import { RequestHandler } from "express";
-import { recurringSummarySchema } from "@subtrack/shared/schemas/summary";
 import {
+  canISpendSchema,
+  recurringSummarySchema,
+} from "@subtrack/shared/schemas/summary";
+import {
+  getCanISpend,
   getCashFlowSummary,
   getIncomeSummary,
   getMonthlySummary,
   getOneTimeSummary,
   getRecurringSummary,
+  getSavingsSummary,
 } from "@/summary/summary.services";
+import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 
 export const recurringSummary: RequestHandler = async (req, res) => {
   const userId = req.user!.id;
@@ -51,4 +57,21 @@ export const monthlySummary: RequestHandler = async (req, res) => {
   const recurringSummary = await getMonthlySummary(userId, month, year);
 
   res.json(recurringSummary);
+};
+
+export const savingsSummary: RequestHandler = async (req, res) => {
+  const userId = req.user!.id;
+
+  const savingsGoalSummary = await getSavingsSummary(userId);
+
+  res.json(savingsGoalSummary);
+};
+
+export const canISpend: RequestHandler = async (req, res) => {
+  const userId = req.user!.id;
+  const { amount } = canISpendSchema.parse(req.query);
+
+  const canISpendResult = await getCanISpend(userId, new Decimal(amount));
+
+  res.json(canISpendResult);
 };

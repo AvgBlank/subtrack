@@ -8,6 +8,8 @@ const summaryRouter = Router()
   .get("/recurring", summaryController.recurringSummary)
   .get("/income", summaryController.incomeSummary)
   .get("/one-time", summaryController.oneTimeSummary)
-  .get("/cash-flow", summaryController.cashFlowSummary);
+  .get("/cash-flow", summaryController.cashFlowSummary)
+  .get("/savings", summaryController.savingsSummary)
+  .get("/can-i-spend", summaryController.canISpend);
 
 export default summaryRouter;

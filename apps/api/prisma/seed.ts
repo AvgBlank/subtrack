@@ -273,7 +273,9 @@ async function main() {
     }
 
     // Create one-time transactions (last 12 months)
-    const numOneTime = Math.floor(Math.random() * 50) + 30; // 30-79 transactions
+    // Jane gets more transactions in Jan 2026
+    const isJane = user.email === "jane@example.com";
+    const numOneTime = isJane ? 60 : Math.floor(Math.random() * 50) + 30; // Jane gets 60, others get 30-79
     console.log(`  💳 Creating ${numOneTime} one-time transactions...`);
     for (let i = 0; i < numOneTime; i++) {
       const expenseName = randomPick(oneTimeExpenses);
@@ -296,13 +298,18 @@ async function main() {
         amount = randomDecimal(10, 150);
       }
 
+      // Jane gets most transactions in Jan 2026
+      const transactionDate = isJane && i < 45
+        ? randomDate(new Date("2026-01-01"), new Date("2026-01-12"))
+        : randomDate(new Date("2025-01-01"), new Date("2026-01-12"));
+
       await prisma.oneTimeTransaction.create({
         data: {
           userId: user.id,
           name: expenseName,
           amount,
           category: randomPick(expenseCategories),
-          date: randomDate(new Date("2025-01-01"), new Date("2026-01-12")),
+          date: transactionDate,
         },
       });
     }
@@ -369,6 +376,8 @@ async function main() {
 
       // Current amount is 0-90% of target
       const currentAmount = randomDecimal(0, targetAmount * 0.9);
+      // Monthly contribution is 1-5% of target amount
+      const monthlyContribution = randomDecimal(targetAmount * 0.01, targetAmount * 0.05);
 
       await prisma.savingsGoal.create({
         data: {
@@ -376,6 +385,7 @@ async function main() {
           name: goalName,
           targetAmount,
           currentAmount,
+          monthlyContribution,
           targetDate: randomDate(
             new Date("2026-06-01"),
             new Date("2030-12-31"),

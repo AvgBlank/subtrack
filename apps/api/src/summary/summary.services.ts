@@ -6,6 +6,8 @@ import type {
   MonthlySummary,
   OneTimeSummary,
   RecurringSummary,
+  SavingsGoalSummary,
+  SavingsSummary,
 } from "@subtrack/shared/types/summary";
 import { getDays } from "@/summary/utils/getDays";
 
@@ -273,4 +275,87 @@ export const getMonthlySummary = async (
     cashFlow: await cashFlow(recurringSummary, incomeSummary, oneTimeSummary),
   };
   return monthlySummary;
+};
+
+export const getSavingsGoalSummary = async (
+  userId: string,
+): Promise<SavingsGoalSummary[]> => {
+  // Fetch savings goals
+  const savingsGoals = await prisma.savingsGoal.findMany({
+    where: {
+      userId,
+    },
+  });
+
+  // Calculations
+  const savingsGoalSummary: SavingsGoalSummary[] = savingsGoals.map((goal) => {
+    const percentComplete = goal.currentAmount.div(goal.targetAmount).mul(100);
+    const monthsRemaining = Math.ceil(
+      (goal.targetDate.getFullYear() - new Date().getFullYear()) * 12 +
+        (goal.targetDate.getMonth() - new Date().getMonth()),
+    );
+    const isAchievable = monthsRemaining > 0;
+
+    return {
+      id: goal.id,
+      name: goal.name,
+      targetAmount: goal.targetAmount,
+      currentAmount: goal.currentAmount,
+      progressPercentage: percentComplete.toNumber(),
+      targetDate: goal.targetDate,
+      monthsRemaining: Math.max(monthsRemaining, 0),
+      isAchievable: isAchievable,
+      requiredMonthlyContribution: isAchievable
+        ? goal.targetAmount
+            .sub(goal.currentAmount)
+            .div(new Decimal(monthsRemaining))
+        : new Decimal(0),
+    };
+  });
+
+  return savingsGoalSummary;
+};
+
+export const getSavingsSummary = async (
+  userId: string,
+): Promise<SavingsSummary> => {
+  // Fetch savings goals
+  const savingsGoals = await getSavingsGoalSummary(userId);
+
+  // Fetch net cash flow
+  const cashFlow = await getCashFlowSummary(
+    userId,
+    new Date().getMonth() + 1,
+    new Date().getFullYear(),
+  );
+
+  // Calculate total required savings
+  const totalRequiredSavings = savingsGoals.reduce(
+    (sum, goal) => sum.add(goal.requiredMonthlyContribution),
+    new Decimal(0),
+  );
+
+  // Remaining after savings
+  const remainingAfterSavings = cashFlow.netCashFlow.sub(totalRequiredSavings);
+
+  // Merge all data into final summary
+  const savingsSummary: SavingsSummary = {
+    period: cashFlow.period,
+    totalRequiredSavings,
+    totalAvailableCash: cashFlow.netCashFlow,
+    remainingAfterSavings,
+    savingsGoals,
+  };
+  return savingsSummary;
+};
+
+export const getCanISpend = async (userId: string, amount: Decimal) => {
+  const savingsSummary = await getSavingsSummary(userId);
+  const remainingAfterSavings =
+    savingsSummary.remainingAfterSavings.sub(amount);
+
+  return {
+    canSpend: remainingAfterSavings.gte(0),
+    remainingAfterSpend: remainingAfterSavings.toNumber(),
+  };
 };

@@ -92,3 +92,26 @@ export type MonthlySummary = {
   oneTime: OneTimeSummary;
   cashFlow: CashFlowSummary;
 };
+
+export type SavingsGoalSummary = {
+  id: string;
+  name: string;
+  targetAmount: Decimal;
+  currentAmount: Decimal;
+  progressPercentage: number;
+  targetDate: Date;
+  requiredMonthlyContribution: Decimal;
+  isAchievable: boolean;
+  monthsRemaining: number;
+};
+
+export type SavingsSummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  totalRequiredSavings: Decimal;
+  totalAvailableCash: Decimal;
+  remainingAfterSavings: Decimal;
+  savingsGoals: SavingsGoalSummary[];
+};

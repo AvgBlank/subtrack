@@ -60,6 +60,14 @@
     "./types/one-time": {
       "import": "./dist/types/one-time.types.js",
       "types": "./dist/types/one-time.types.d.ts"
+    },
+    "./schemas/savings": {
+      "import": "./dist/schemas/savings.js",
+      "types": "./dist/schemas/savings.d.ts"
+    },
+    "./types/savings": {
+      "import": "./dist/types/savings.types.js",
+      "types": "./dist/types/savings.types.d.ts"
     }
   }
 }

@@ -12,8 +12,10 @@ import {
   getRecurringTransactions,
   toggleRecurringStatus,
 } from "@/lib/api/recurring";
+import { getSummary } from "@/lib/api/summary";
 import { toast } from "sonner";
 import { Plus, Receipt, CreditCard } from "lucide-react";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 type ViewType = "BILL" | "SUBSCRIPTION";
 
@@ -25,10 +27,17 @@ export default function RecurringPage() {
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<ViewType>("BILL");
 
-  const { data: transactions = [], isLoading } = useQuery({
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
     queryKey: ["recurring"],
     queryFn: getRecurringTransactions,
   });
+
+  const { data: summary, isLoading: summaryLoading } = useQuery({
+    queryKey: ["summary"],
+    queryFn: () => getSummary(),
+  });
+
+  const isLoading = transactionsLoading || summaryLoading;
 
   // Split transactions by type
   const bills = useMemo(
@@ -39,6 +48,13 @@ export default function RecurringPage() {
     () => transactions.filter((t) => t.type === "SUBSCRIPTION"),
     [transactions],
   );
+
+  // Get totals from summary (normalized to monthly)
+  const totalMonthly = Number(summary?.recurring.totals.total ?? 0);
+  const totalBills = Number(summary?.recurring.totals.bills ?? 0);
+  const totalSubscriptions = Number(summary?.recurring.totals.subscriptions ?? 0);
+  const billsCount = summary?.recurring.counts.bills ?? 0;
+  const subscriptionsCount = summary?.recurring.counts.subscriptions ?? 0;
 
   const activeTransactions = activeView === "BILL" ? bills : subscriptions;
 
@@ -109,6 +125,30 @@ export default function RecurringPage() {
           <Plus className="mr-2 h-4 w-4" />
           Add recurring
         </Button>
+      </div>
+
+      <div className="mb-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Total Monthly</p>
+          <p className="text-2xl font-bold">{formatCurrency(totalMonthly)}</p>
+          <p className="text-muted-foreground text-xs">
+            {billsCount + subscriptionsCount} active commitment{billsCount + subscriptionsCount !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Bills</p>
+          <p className="text-2xl font-bold">{formatCurrency(totalBills)}</p>
+          <p className="text-muted-foreground text-xs">
+            {billsCount} active bill{billsCount !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Subscriptions</p>
+          <p className="text-2xl font-bold">{formatCurrency(totalSubscriptions)}</p>
+          <p className="text-muted-foreground text-xs">
+            {subscriptionsCount} active subscription{subscriptionsCount !== 1 ? "s" : ""}
+          </p>
+        </div>
       </div>
 
       <div className="mb-6">

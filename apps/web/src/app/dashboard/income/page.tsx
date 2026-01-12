@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { IncomeTable, type Income } from "@/components/income/income-table";
 import { AddEditIncomeModal } from "@/components/income/add-edit-income-modal";
 import { getIncomes, toggleIncomeStatus } from "@/lib/api/income";
+import { getSummary } from "@/lib/api/summary";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { formatCurrency } from "@/lib/formatCurrency";
 
 export default function IncomePage() {
   const queryClient = useQueryClient();
@@ -15,10 +17,23 @@ export default function IncomePage() {
   const [editingIncome, setEditingIncome] = useState<Income | null>(null);
   const [togglingId, setTogglingId] = useState<string | null>(null);
 
-  const { data: incomes = [], isLoading } = useQuery({
+  const { data: incomes = [], isLoading: incomesLoading } = useQuery({
     queryKey: ["income"],
     queryFn: getIncomes,
   });
+
+  const { data: summary, isLoading: summaryLoading } = useQuery({
+    queryKey: ["summary"],
+    queryFn: () => getSummary(),
+  });
+
+  const isLoading = incomesLoading || summaryLoading;
+
+  // Get data from summary
+  const totalIncome = Number(summary?.income.totalIncome ?? 0);
+  const incomeCount = summary?.income.incomeCount ?? 0;
+  const activeIncomes = incomes.filter((i) => i.isActive);
+  const inactiveCount = incomes.length - activeIncomes.length;
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
@@ -87,6 +102,37 @@ export default function IncomePage() {
           <Plus className="mr-2 h-4 w-4" />
           Add income
         </Button>
+      </div>
+
+      {/* Summary Tiles */}
+      <div className="mb-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Total Monthly Income</p>
+          <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+            {formatCurrency(totalIncome)}
+          </p>
+          <p className="text-muted-foreground text-xs">
+            {incomeCount} active source{incomeCount !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Income Sources</p>
+          <p className="text-2xl font-bold">{incomes.length}</p>
+          <p className="text-muted-foreground text-xs">
+            {activeIncomes.length} active, {inactiveCount} inactive
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Net Cash Flow</p>
+          <p className={`text-2xl font-bold ${
+            Number(summary?.cashFlow.netCashFlow ?? 0) >= 0
+              ? "text-green-600 dark:text-green-400"
+              : "text-red-600 dark:text-red-400"
+          }`}>
+            {formatCurrency(Number(summary?.cashFlow.netCashFlow ?? 0))}
+          </p>
+          <p className="text-muted-foreground text-xs">After all expenses</p>
+        </div>
       </div>
 
       <IncomeTable

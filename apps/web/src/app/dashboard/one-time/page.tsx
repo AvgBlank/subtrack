@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/components/one-time/one-time-table";
 import { AddEditOneTimeModal } from "@/components/one-time/add-edit-one-time-modal";
 import { getOneTimeTransactions } from "@/lib/api/one-time";
+import { getSummary } from "@/lib/api/summary";
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 
@@ -28,15 +29,25 @@ export default function OneTimePage() {
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth() + 1);
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
-  const { data: transactions = [], isLoading } = useQuery({
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
     queryKey: ["one-time", selectedMonth, selectedYear],
     queryFn: () => getOneTimeTransactions(selectedMonth, selectedYear),
   });
 
-  // Calculate total for the month
-  const monthlyTotal = useMemo(() => {
-    return transactions.reduce((sum, t) => sum + t.amount, 0);
-  }, [transactions]);
+  const { data: summary, isLoading: summaryLoading } = useQuery({
+    queryKey: ["summary", selectedMonth, selectedYear],
+    queryFn: () => getSummary(String(selectedMonth), String(selectedYear)),
+  });
+
+  const isLoading = transactionsLoading || summaryLoading;
+
+  // Get data from summary
+  const monthlyTotal = Number(summary?.oneTime.totalOneTimeTransactions ?? 0);
+  const transactionCount = summary?.oneTime.oneTimeTransactionCount ?? 0;
+  const categorySummary = summary?.oneTime.categorySummary ?? {};
+  const topCategory = Object.entries(categorySummary).sort(
+    (a, b) => Number(b[1].totalAmount) - Number(a[1].totalAmount)
+  )[0];
 
   const handlePreviousMonth = () => {
     if (selectedMonth === 1) {
@@ -135,11 +146,31 @@ export default function OneTimePage() {
         </div>
       </div>
 
-      <div className="mb-6 rounded-lg border bg-card p-4">
-        <p className="text-muted-foreground text-sm">
-          Total one-time expenses this month
-        </p>
-        <p className="text-2xl font-bold">{formatCurrency(monthlyTotal)}</p>
+      {/* Summary Tiles */}
+      <div className="mb-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Total This Month</p>
+          <p className="text-2xl font-bold">{formatCurrency(monthlyTotal)}</p>
+          <p className="text-muted-foreground text-xs">
+            {transactionCount} expense{transactionCount !== 1 ? "s" : ""}
+          </p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Average Per Expense</p>
+          <p className="text-2xl font-bold">
+            {formatCurrency(transactionCount > 0 ? monthlyTotal / transactionCount : 0)}
+          </p>
+          <p className="text-muted-foreground text-xs">This month</p>
+        </div>
+        <div className="rounded-lg border bg-card p-4">
+          <p className="text-muted-foreground text-sm">Top Category</p>
+          <p className="text-2xl font-bold">
+            {topCategory ? topCategory[0] : "—"}
+          </p>
+          <p className="text-muted-foreground text-xs">
+            {topCategory ? formatCurrency(Number(topCategory[1].totalAmount)) : "No expenses"}
+          </p>
+        </div>
       </div>
 
       <OneTimeTable transactions={transactions} onEditAction={handleEdit} />

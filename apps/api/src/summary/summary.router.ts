@@ -4,5 +4,10 @@ import authenticate from "@/shared/middleware/authMiddleware";
 
 const summaryRouter = Router()
   .use(authenticate)
-  .get("/recurring", summaryController.recurringSummary);
+  .get("/", summaryController.monthlySummary)
+  .get("/recurring", summaryController.recurringSummary)
+  .get("/income", summaryController.incomeSummary)
+  .get("/one-time", summaryController.oneTimeSummary)
+  .get("/cash-flow", summaryController.cashFlowSummary);
+
 export default summaryRouter;

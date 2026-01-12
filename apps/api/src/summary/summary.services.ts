@@ -1,6 +1,12 @@
 import { Decimal } from "@prisma/client/runtime/client";
 import prisma from "@/shared/lib/db";
-import type { RecurringSummary } from "@subtrack/shared/types/summary";
+import type {
+  CashFlowSummary,
+  IncomeSummary,
+  MonthlySummary,
+  OneTimeSummary,
+  RecurringSummary,
+} from "@subtrack/shared/types/summary";
 import { getDays } from "@/summary/utils/getDays";
 
 export const getRecurringSummary = async (
@@ -68,6 +74,10 @@ export const getRecurringSummary = async (
   );
   const total = totalBills.add(totalSubscriptions);
 
+  // Counts
+  const billsCount = bills.length;
+  const subscriptionsCount = subscriptions.length;
+
   // Category summary
   const categorySummary: RecurringSummary["categorySummary"] = {};
   normalizedTransactions.forEach((item) => {
@@ -95,9 +105,172 @@ export const getRecurringSummary = async (
       subscriptions: totalSubscriptions,
       total,
     },
+    counts: {
+      bills: billsCount,
+      subscriptions: subscriptionsCount,
+    },
     bills,
     subscriptions,
     categorySummary,
   };
   return recurringSummary;
+};
+
+export const getIncomeSummary = async (
+  userId: string,
+  month: number,
+  year: number,
+): Promise<IncomeSummary> => {
+  // Fetch raw data
+  const income = await prisma.income.findMany({
+    where: { userId, isActive: true },
+  });
+
+  // Calculate total
+  const totalIncome = income.reduce(
+    (sum, item) => sum.add(item.amount),
+    new Decimal(0),
+  );
+
+  // Count of income sources
+  const incomeCount = income.length;
+
+  // Income sources
+  const incomeSources = income.map((item) => ({
+    sourceName: item.source,
+    amount: item.amount,
+  }));
+
+  // Merge all data into final summary
+  const incomeSummary: IncomeSummary = {
+    period: { month, year },
+    totalIncome,
+    incomeCount,
+    incomeSources,
+  };
+  return incomeSummary;
+};
+
+export const getOneTimeSummary = async (
+  userId: string,
+  month: number,
+  year: number,
+): Promise<OneTimeSummary> => {
+  // Fetch raw data
+  const oneTimeTransactions = await prisma.oneTimeTransaction.findMany({
+    where: {
+      userId,
+      date: {
+        gte: new Date(year, month - 1, 1),
+        lte: new Date(year, month - 1, getDays(month, year)),
+      },
+    },
+  });
+
+  // Calculate total
+  const totalOneTimeTransactions = oneTimeTransactions.reduce(
+    (sum, item) => sum.add(item.amount),
+    new Decimal(0),
+  );
+
+  // Transactions
+  const transactions: OneTimeSummary["transactions"] = oneTimeTransactions.map(
+    (item) => ({
+      id: item.id,
+      name: item.name,
+      category: item.category,
+      amount: item.amount,
+      date: item.date,
+    }),
+  );
+
+  // Count of one-time transactions
+  const oneTimeTransactionCount = oneTimeTransactions.length;
+
+  // Category summary
+  const categorySummary: OneTimeSummary["categorySummary"] = {};
+  oneTimeTransactions.forEach((item) => {
+    if (!categorySummary[item.category]) {
+      categorySummary[item.category] = {
+        count: 0,
+        totalAmount: new Decimal(0),
+      };
+    }
+    categorySummary[item.category].count += 1;
+    categorySummary[item.category].totalAmount = categorySummary[
+      item.category
+    ].totalAmount.add(item.amount);
+  });
+
+  // Merge all data into final summary
+  const oneTimeSummary: OneTimeSummary = {
+    period: { month, year },
+    totalOneTimeTransactions,
+    oneTimeTransactionCount,
+    transactions,
+    categorySummary,
+  };
+  return oneTimeSummary;
+};
+
+const cashFlow = async (
+  recurringSummary: RecurringSummary,
+  incomeSummary: IncomeSummary,
+  oneTimeSummary: OneTimeSummary,
+): Promise<CashFlowSummary> => {
+  const netCashFlow = incomeSummary.totalIncome.sub(
+    recurringSummary.totals.total.add(oneTimeSummary.totalOneTimeTransactions),
+  );
+
+  return {
+    period: recurringSummary.period,
+    totalRecurringExpenses: recurringSummary.totals.total,
+    totalIncome: incomeSummary.totalIncome,
+    totalOneTimeExpenses: oneTimeSummary.totalOneTimeTransactions,
+    netCashFlow,
+  };
+};
+
+export const getCashFlowSummary = async (
+  userId: string,
+  month: number,
+  year: number,
+): Promise<CashFlowSummary> => {
+  // Calculate all totals
+  const [recurringSummary, incomeSummary, oneTimeSummary] = await Promise.all([
+    getRecurringSummary(userId, month, year),
+    getIncomeSummary(userId, month, year),
+    getOneTimeSummary(userId, month, year),
+  ]);
+
+  // Merge all data into final summary
+  const cashFlowSummary = await cashFlow(
+    recurringSummary,
+    incomeSummary,
+    oneTimeSummary,
+  );
+  return cashFlowSummary;
+};
+
+export const getMonthlySummary = async (
+  userId: string,
+  month: number,
+  year: number,
+): Promise<MonthlySummary> => {
+  // Calculate all summaries
+  const [recurringSummary, incomeSummary, oneTimeSummary] = await Promise.all([
+    getRecurringSummary(userId, month, year),
+    getIncomeSummary(userId, month, year),
+    getOneTimeSummary(userId, month, year),
+  ]);
+
+  // Merge all data into final summary
+  const monthlySummary: MonthlySummary = {
+    period: { month, year },
+    recurring: recurringSummary,
+    income: incomeSummary,
+    oneTime: oneTimeSummary,
+    cashFlow: await cashFlow(recurringSummary, incomeSummary, oneTimeSummary),
+  };
+  return monthlySummary;
 };

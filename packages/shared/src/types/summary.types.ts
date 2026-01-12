@@ -21,6 +21,10 @@ export type RecurringSummary = {
     subscriptions: Decimal;
     total: Decimal;
   };
+  counts: {
+    bills: number;
+    subscriptions: number;
+  };
   bills: RecurringItemSummary[];
   subscriptions: RecurringItemSummary[];
   categorySummary: {
@@ -30,4 +34,61 @@ export type RecurringSummary = {
       totalNormalizedAmount: Decimal;
     };
   };
+};
+
+export type IncomeSummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  totalIncome: Decimal;
+  incomeCount: number;
+  incomeSources: {
+    sourceName: string;
+    amount: Decimal;
+  }[];
+};
+
+export type OneTimeSummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  totalOneTimeTransactions: Decimal;
+  oneTimeTransactionCount: number;
+  transactions: {
+    id: string;
+    name: string;
+    category: string;
+    amount: Decimal;
+    date: Date;
+  }[];
+  categorySummary: {
+    [category: string]: {
+      count: number;
+      totalAmount: Decimal;
+    };
+  };
+};
+
+export type CashFlowSummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  totalIncome: Decimal;
+  totalRecurringExpenses: Decimal;
+  totalOneTimeExpenses: Decimal;
+  netCashFlow: Decimal;
+};
+
+export type MonthlySummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  recurring: RecurringSummary;
+  income: IncomeSummary;
+  oneTime: OneTimeSummary;
+  cashFlow: CashFlowSummary;
 };

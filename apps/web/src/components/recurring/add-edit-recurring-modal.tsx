@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useForm } from "@tanstack/react-form";
-import { createRecurringSchema } from "@subtrack/shared/schemas/recurring";
+import { createRecurringFormSchema } from "@subtrack/shared/schemas/recurring";
 import type {
   RecurringFrequency,
   RecurringType,
@@ -37,9 +37,9 @@ import { Loader2, Trash2 } from "lucide-react";
 
 type AddEditRecurringModalProps = {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onOpenChangeAction: (open: boolean) => void;
   transaction?: RecurringTransaction | null;
-  onSuccess: () => void;
+  onSuccessAction: () => void;
 };
 
 const categories = [
@@ -65,9 +65,9 @@ const formatDateForInput = (date: Date | string | undefined): string => {
 
 export function AddEditRecurringModal({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   transaction,
-  onSuccess,
+  onSuccessAction,
 }: AddEditRecurringModalProps) {
   const isEditing = !!transaction;
   const [isDeleting, setIsDeleting] = useState(false);
@@ -83,14 +83,7 @@ export function AddEditRecurringModal({
       startDate: formatDateForInput(transaction?.startDate),
     },
     validators: {
-      onChange: ({ value }) => {
-        // Convert date string to Date before validating with the shared schema
-        const result = createRecurringSchema.safeParse({
-          ...value,
-          startDate: new Date(value.startDate),
-        });
-        return result.success ? undefined : result.error;
-      },
+      onChange: createRecurringFormSchema,
     },
     onSubmit: async ({ value }) => {
       try {
@@ -106,8 +99,8 @@ export function AddEditRecurringModal({
           await createRecurring(payload);
           toast.success("Recurring added");
         }
-        onSuccess();
-        onOpenChange(false);
+        onSuccessAction();
+        onOpenChangeAction(false);
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Something went wrong",
@@ -148,8 +141,8 @@ export function AddEditRecurringModal({
     try {
       await deleteRecurring(transaction.id);
       toast.success("Recurring deleted");
-      onSuccess();
-      onOpenChange(false);
+      onSuccessAction();
+      onOpenChangeAction(false);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to delete");
     } finally {
@@ -158,8 +151,8 @@ export function AddEditRecurringModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Edit Recurring" : "Add Recurring"}

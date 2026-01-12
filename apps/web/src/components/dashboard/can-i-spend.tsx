@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import { checkCanISpend } from "@/lib/api/summary";
 import { ShoppingCart, Check, X, Loader2 } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
@@ -83,20 +82,23 @@ export function CanISpend() {
 
           {result !== null && (
             <div
-              className={cn(
-                "flex items-center gap-3 rounded-lg p-4",
-                result.canSpend
-                  ? "bg-green-50 dark:bg-green-950/30"
-                  : "bg-red-50 dark:bg-red-950/30",
-              )}
+              className={`
+                flex items-center gap-3 rounded-lg p-4
+                ${
+                  result.canSpend
+                    ? "bg-green-50 dark:bg-green-950/30"
+                    : "bg-red-50 dark:bg-red-950/30"
+                }
+              `}
             >
               <div
-                className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-full",
+                className={`                  "flex h-10 w-10 items-center justify-center rounded-full",
+                ${
                   result.canSpend
                     ? "bg-green-100 dark:bg-green-900"
-                    : "bg-red-100 dark:bg-red-900",
-                )}
+                    : "bg-red-100 dark:bg-red-900"
+                }
+              `}
               >
                 {result.canSpend ? (
                   <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -106,12 +108,14 @@ export function CanISpend() {
               </div>
               <div className="flex-1">
                 <p
-                  className={cn(
-                    "font-semibold",
-                    result.canSpend
-                      ? "text-green-700 dark:text-green-300"
-                      : "text-red-700 dark:text-red-300",
-                  )}
+                  className={`
+                    font-semibold
+                    ${
+                      result.canSpend
+                        ? "text-green-700 dark:text-green-300"
+                        : "text-red-700 dark:text-red-300"
+                    }
+                  `}
                 >
                   {result.canSpend ? "Yes, you can!" : "Not right now"}
                 </p>

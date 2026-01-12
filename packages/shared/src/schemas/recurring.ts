@@ -14,6 +14,20 @@ export const createRecurringSchema = z.object({
   }),
 });
 
+export const createRecurringFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  amount: z.number().positive("Amount must be greater than 0"),
+  type: typeEnum,
+  category: z.string().min(1, "Category is required"),
+  frequency: frequencyEnum,
+  startDate: z
+    .string()
+    .min(1, "Start date is required")
+    .refine((dateStr) => new Date(dateStr) <= new Date(), {
+      message: "Start date cannot be in the future",
+    }),
+});
+
 export const updateRecurringSchema = createRecurringSchema.partial();
 
 export const toggleRecurringSchema = z.object({

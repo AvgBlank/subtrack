@@ -7,6 +7,7 @@ import errorHandler from "@/shared/middleware/errorHandler";
 import authRouter from "@/auth/auth.router";
 import summaryRouter from "@/summary/summary.router";
 import recurringRouter from "@/recurring/recurring.router";
+import incomeRouter from "@/income/income.router";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get("/", (_req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/summary", summaryRouter);
 app.use("/api/recurring", recurringRouter);
+app.use("/api/income", incomeRouter);
 
 // Error Handler
 app.use(errorHandler);

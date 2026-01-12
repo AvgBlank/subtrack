@@ -5,7 +5,7 @@ import {
   INTERNAL_SERVER_ERROR,
   UNAUTHORIZED,
 } from "@subtrack/shared/httpStatusCodes";
-import { compare, hash } from "bcryptjs";
+import { verify, hash } from "argon2";
 import { generateRefreshToken } from "@/auth/utils/tokens";
 import {
   GOOGLE_CLIENT_ID,
@@ -25,7 +25,7 @@ export const handleRegister = async (
   if (existingUser) throw new AppError(CONFLICT, "User already exists");
 
   // Create user
-  const hashedPassword = await hash(password, 10);
+  const hashedPassword = await hash(password);
   const user = await prisma.user.create({
     data: {
       name,
@@ -61,7 +61,7 @@ export const handleLogin = async (email: string, password: string) => {
     throw new AppError(UNAUTHORIZED, "Please log in using google");
 
   // Validate Password
-  const passwordValid = await compare(password, user.password);
+  const passwordValid = await verify(user.password, password);
   if (!passwordValid)
     throw new AppError(UNAUTHORIZED, "Invalid email or password");
 

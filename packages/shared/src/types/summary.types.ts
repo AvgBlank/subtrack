@@ -82,7 +82,6 @@ export type CashFlowSummary = {
   netCashFlow: Decimal;
 };
 
-
 export type SavingsGoalSummary = {
   id: string;
   name: string;

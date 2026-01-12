@@ -33,9 +33,17 @@
       "import": "./dist/schemas/summary.js",
       "types": "./dist/schemas/summary.d.ts"
     },
+    "./schemas/recurring": {
+      "import": "./dist/schemas/recurring.js",
+      "types": "./dist/schemas/recurring.d.ts"
+    },
     "./types/summary": {
       "import": "./dist/types/summary.types.js",
       "types": "./dist/types/summary.types.d.ts"
+    },
+    "./types/recurring": {
+      "import": "./dist/types/recurring.types.js",
+      "types": "./dist/types/recurring.types.d.ts"
     }
   }
 }

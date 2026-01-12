@@ -24,10 +24,11 @@ function getStatus(goal: SavingsGoal): {
   color: string;
 } {
   // If progress is ahead of schedule based on months remaining
-  const expectedProgress = goal.monthsRemaining > 0 
-    ? 100 - (goal.monthsRemaining / (goal.monthsRemaining + 12)) * 100
-    : 100;
-  
+  const expectedProgress =
+    goal.monthsRemaining > 0
+      ? 100 - (goal.monthsRemaining / (goal.monthsRemaining + 12)) * 100
+      : 100;
+
   if (goal.progressPercentage >= expectedProgress) {
     return { label: "On track", color: "text-green-600 dark:text-green-400" };
   } else if (goal.progressPercentage >= expectedProgress * 0.7) {
@@ -50,7 +51,9 @@ function SavingsGoalItem({ goal }: { goal: SavingsGoal }) {
       </div>
       <Progress value={Math.min(goal.progressPercentage, 100)} />
       <div className="text-muted-foreground flex justify-between text-xs">
-        <span>{formatCurrency(goal.requiredMonthlyContribution)}/mo required</span>
+        <span>
+          {formatCurrency(goal.requiredMonthlyContribution)}/mo required
+        </span>
         <span>
           {goal.monthsRemaining > 0
             ? `${goal.monthsRemaining} months left`

@@ -52,7 +52,10 @@ function RecurringColumn({
       </div>
       <div className="space-y-2">
         {items.slice(0, 3).map((item) => (
-          <div key={item.id} className="flex items-center justify-between text-sm">
+          <div
+            key={item.id}
+            className="flex items-center justify-between text-sm"
+          >
             <span className="truncate">{item.name}</span>
             <span className="text-muted-foreground ml-2">
               {formatCurrency(item.normalizedAmount)}
@@ -60,14 +63,19 @@ function RecurringColumn({
           </div>
         ))}
         {items.length === 0 && (
-          <p className="text-muted-foreground text-sm">No {title.toLowerCase()} yet</p>
+          <p className="text-muted-foreground text-sm">
+            No {title.toLowerCase()} yet
+          </p>
         )}
       </div>
     </div>
   );
 }
 
-export function RecurringSnapshot({ bills, subscriptions }: RecurringSnapshotProps) {
+export function RecurringSnapshot({
+  bills,
+  subscriptions,
+}: RecurringSnapshotProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">

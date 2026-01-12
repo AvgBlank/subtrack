@@ -25,3 +25,6 @@ export const loginSchema = z.object({
 export const oAuthSchema = z.object({
   code: z.string("Code must be a string"),
 });
+
+export type LoginSchema = z.infer<typeof loginSchema>;
+export type RegisterSchema = z.infer<typeof registerSchema>;

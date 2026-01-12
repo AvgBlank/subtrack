@@ -1,0 +1,119 @@
+import apiFetch from "@/utils/apiFetch";
+import type {
+  LoginSchema,
+  RegisterSchema,
+} from "@subtrack/shared/schemas/auth";
+
+type AuthResponse =
+  | {
+      success: true;
+    }
+  | {
+      success: false;
+      message: string;
+    };
+
+export const verifyAuth = async (cookies: string) => {
+  try {
+    const { response } = await apiFetch("/api/auth/verify", {
+      headers: {
+        Cookie: cookies,
+      },
+      cache: "no-store",
+    });
+    if (response.ok) {
+      return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+};
+
+export const register = async (
+  values: RegisterSchema,
+): Promise<AuthResponse> => {
+  try {
+    const { response, data } = await apiFetch("/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.error || "Registration failed",
+      };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Registration failed" };
+  }
+};
+
+export const login = async (values: LoginSchema): Promise<AuthResponse> => {
+  try {
+    const { response, data } = await apiFetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.error || "Login failed",
+      };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Login failed" };
+  }
+};
+
+export const googleOAuth = async (
+  code: string | null,
+): Promise<AuthResponse> => {
+  try {
+    if (!code) {
+      return {
+        success: false,
+        message: "OAuth Error",
+      };
+    }
+    const { response, data } = await apiFetch("/api/auth/google", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code }),
+    });
+    if (!response.ok) {
+      return {
+        success: false,
+        message: data.error || "OAuth Error",
+      };
+    }
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "OAuth Error" };
+  }
+};
+
+export const logout = async (): Promise<{ success: true }> => {
+  try {
+    await apiFetch("/api/auth/logout", {
+      method: "DELETE",
+    });
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: true };
+  }
+};

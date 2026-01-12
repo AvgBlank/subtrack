@@ -7,6 +7,6 @@ const authRouter = Router()
   .post("/login", authControllers.login)
   .post("/google", authControllers.googleOAuth)
   .get("/verify", authenticate, authControllers.verify)
-  .get("/logout", authControllers.logout);
+  .delete("/logout", authControllers.logout);
 
 export default authRouter;

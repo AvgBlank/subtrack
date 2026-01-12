@@ -4,7 +4,20 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NODE_ENV", "PORT", "APP_ORIGIN"],
+      "env": [
+        "NODE_ENV",
+        "PORT",
+        "APP_ORIGIN",
+        "REFRESH_TOKEN_SECRET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI",
+        "DATABASE_URL",
+
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_GOOGLE_CLIENT_ID",
+        "NEXT_PUBLIC_GOOGLE_REDIRECT_URI"
+      ],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [
         "dist/**",

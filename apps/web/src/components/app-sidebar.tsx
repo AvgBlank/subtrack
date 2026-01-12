@@ -61,7 +61,7 @@ export function AppSidebar({
         icon: ChartColumn,
         items: [
           { title: "Analytics", url: "/dashboard/analytics" },
-          { title: "Exports", url: "/dashboard/analytics" },
+          { title: "Exports", url: "/dashboard/exports" },
         ],
       },
     ],

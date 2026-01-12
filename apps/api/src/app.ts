@@ -10,6 +10,7 @@ import recurringRouter from "@/recurring/recurring.router";
 import incomeRouter from "@/income/income.router";
 import oneTimeRouter from "@/one-time/one-time.router";
 import savingsRouter from "@/savings/savings.router";
+import exportsRouter from "@/exports/exports.router";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use("/api/recurring", recurringRouter);
 app.use("/api/income", incomeRouter);
 app.use("/api/one-time", oneTimeRouter);
 app.use("/api/savings", savingsRouter);
+app.use("/api/exports", exportsRouter);
 
 // Error Handler
 app.use(errorHandler);

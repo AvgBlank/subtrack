@@ -154,7 +154,7 @@ export function AddEditIncomeModal({
                     <Label htmlFor={field.name}>Amount</Label>
                     <div className="relative">
                       <span className="text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2">
-                        $
+                        ₹
                       </span>
                       <Input
                         id={field.name}

@@ -52,6 +52,14 @@
     "./types/income": {
       "import": "./dist/types/income.types.js",
       "types": "./dist/types/income.types.d.ts"
+    },
+    "./schemas/one-time": {
+      "import": "./dist/schemas/one-time.js",
+      "types": "./dist/schemas/one-time.d.ts"
+    },
+    "./types/one-time": {
+      "import": "./dist/types/one-time.types.js",
+      "types": "./dist/types/one-time.types.d.ts"
     }
   }
 }

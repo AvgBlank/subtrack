@@ -8,6 +8,7 @@ import authRouter from "@/auth/auth.router";
 import summaryRouter from "@/summary/summary.router";
 import recurringRouter from "@/recurring/recurring.router";
 import incomeRouter from "@/income/income.router";
+import oneTimeRouter from "@/one-time/one-time.router";
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/summary", summaryRouter);
 app.use("/api/recurring", recurringRouter);
 app.use("/api/income", incomeRouter);
+app.use("/api/one-time", oneTimeRouter);
 
 // Error Handler
 app.use(errorHandler);

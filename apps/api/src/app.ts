@@ -3,8 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import { APP_ORIGIN } from "@/shared/constants/env";
-import authRouter from "@/auth/auth.router";
 import errorHandler from "@/shared/middleware/errorHandler";
+import authRouter from "@/auth/auth.router";
+import summaryRouter from "@/summary/summary.router";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/", (_req, res) => {
   res.json("Hello, World!");
 });
 app.use("/api/auth", authRouter);
+app.use("/api/summary", summaryRouter);
 
 // Error Handler
 app.use(errorHandler);

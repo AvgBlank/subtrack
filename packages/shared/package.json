@@ -8,6 +8,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "dependencies": {
+    "decimal.js": "^10.6.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -27,6 +28,14 @@
     "./schemas/auth": {
       "import": "./dist/schemas/auth.js",
       "types": "./dist/schemas/auth.d.ts"
+    },
+    "./schemas/summary": {
+      "import": "./dist/schemas/summary.js",
+      "types": "./dist/schemas/summary.d.ts"
+    },
+    "./types/summary": {
+      "import": "./dist/types/summary.types.js",
+      "types": "./dist/types/summary.types.d.ts"
     }
   }
 }

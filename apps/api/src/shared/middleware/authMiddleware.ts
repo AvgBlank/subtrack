@@ -36,6 +36,7 @@ const authenticate: RequestHandler = async (req, _res, next) => {
     id: user.id,
     name: user.name,
     email: user.email,
+    picture: user.picture,
   };
 
   next();

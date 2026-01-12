@@ -36,6 +36,7 @@ export const handleRegister = async (
       id: true,
       name: true,
       email: true,
+      picture: true,
     },
   });
 
@@ -56,6 +57,7 @@ export const handleLogin = async (email: string, password: string) => {
       name: true,
       email: true,
       password: true,
+      picture: true,
     },
   });
   if (!user) throw new AppError(UNAUTHORIZED, "Invalid email or password");
@@ -101,12 +103,16 @@ export const handleGoogleOAuth = async (code: string) => {
   }
 
   // Get user info from Google
-  const { email, name } = (await fetch(
+  const { email, name, picture } = (await fetch(
     "https://www.googleapis.com/oauth2/v2/userinfo",
     {
       headers: { Authorization: `Bearer ${access_token}` },
     },
-  ).then((res) => res.json())) as { email?: string; name?: string };
+  ).then((res) => res.json())) as {
+    email?: string;
+    name?: string;
+    picture?: string;
+  };
   if (!email) {
     throw new AppError(UNAUTHORIZED, "No email provided");
   }
@@ -118,6 +124,7 @@ export const handleGoogleOAuth = async (code: string) => {
       id: true,
       name: true,
       email: true,
+      picture: true,
     },
   });
   if (!user) {
@@ -126,11 +133,23 @@ export const handleGoogleOAuth = async (code: string) => {
         name: name ?? "Unknown User",
         email,
         password: null,
+        picture,
       },
       select: {
         id: true,
         name: true,
         email: true,
+        picture: true,
+      },
+    });
+  }
+  if (user && !user.picture && picture) {
+    user = await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        picture,
       },
     });
   }

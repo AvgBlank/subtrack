@@ -13,4 +13,88 @@ model User {
     name     String
     email    String  @unique
     password String?
+
+    picture String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    recurringTransactions RecurringTransactions[]
+    oneTimeTransactions   OneTimeTransaction[]
+    incomes               Income[]
+    savingsGoals          SavingsGoal[]
+}
+
+model RecurringTransactions {
+    id String @id @default(uuid())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    name      String
+    amount    Decimal
+    type      Type
+    category  String
+    frequency Frequency
+    startDate DateTime
+    isActive  Boolean   @default(true)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model OneTimeTransaction {
+    id String @id @default(uuid())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    name     String
+    amount   Decimal
+    category String
+    date     DateTime
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Income {
+    id String @id @default(uuid())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    source String
+    amount Decimal
+    date   DateTime
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model SavingsGoal {
+    id String @id @default(uuid())
+
+    userId String
+    user   User   @relation(fields: [userId], references: [id])
+
+    name          String
+    targetAmount  Decimal
+    currentAmount Decimal  @default(0.0)
+    targetDate    DateTime
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum Type {
+    BILL
+    SUBSCRIPTION
+}
+
+enum Frequency {
+    DAILY
+    WEEKLY
+    MONTHLY
+    YEARLY
 }

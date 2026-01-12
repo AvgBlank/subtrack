@@ -40,6 +40,7 @@ const Register = () => {
         return;
       }
 
+      toast.success("Registered successfully!");
       setAuth(result.data.user);
       redirect("/dashboard");
     },

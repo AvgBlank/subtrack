@@ -1,4 +1,4 @@
-import apiFetch from "@/utils/apiFetch";
+import { jsonFetch } from "@/utils/apiFetch";
 import type {
   LoginSchema,
   RegisterSchema,
@@ -12,6 +12,7 @@ type AuthResponse =
           id: string;
           name: string;
           email: string;
+          picture: string;
         };
       };
     }
@@ -22,7 +23,7 @@ type AuthResponse =
 
 export const verifyAuth = async (): Promise<AuthResponse> => {
   try {
-    const { response, data } = await apiFetch("/api/auth/verify", {
+    const { response, data } = await jsonFetch("/api/auth/verify", {
       cache: "no-store",
     });
     if (response.ok) {
@@ -38,7 +39,7 @@ export const register = async (
   values: RegisterSchema,
 ): Promise<AuthResponse> => {
   try {
-    const { response, data } = await apiFetch("/api/auth/register", {
+    const { response, data } = await jsonFetch("/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +61,7 @@ export const register = async (
 
 export const login = async (values: LoginSchema): Promise<AuthResponse> => {
   try {
-    const { response, data } = await apiFetch("/api/auth/login", {
+    const { response, data } = await jsonFetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +91,7 @@ export const googleOAuth = async (
         message: "OAuth Error",
       };
     }
-    const { response, data } = await apiFetch("/api/auth/google", {
+    const { response, data } = await jsonFetch("/api/auth/google", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +113,7 @@ export const googleOAuth = async (
 
 export const logout = async (): Promise<{ success: true }> => {
   try {
-    await apiFetch("/api/auth/logout", {
+    await jsonFetch("/api/auth/logout", {
       method: "DELETE",
     });
     return { success: true };

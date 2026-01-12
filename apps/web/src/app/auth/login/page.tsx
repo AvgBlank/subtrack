@@ -39,6 +39,7 @@ const Login = () => {
         return;
       }
 
+      toast.success("Logged in successfully!");
       setAuth(result.data.user);
       redirect("/dashboard");
     },

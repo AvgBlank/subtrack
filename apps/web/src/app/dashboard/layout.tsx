@@ -1,10 +1,15 @@
 "use client";
 
-import Logout from "@/components/custom/logout";
 import { verifyAuth } from "@/lib/api/auth";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore, useRequiredAuthUser } from "@/store/auth-store";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
+import { AppSidebar } from "@/components/app-sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 
 export default function DashLayout({
   children,
@@ -12,6 +17,7 @@ export default function DashLayout({
   children: React.ReactNode;
 }>) {
   const [loading, setLoading] = useState(true);
+  const user = useRequiredAuthUser();
 
   useEffect(() => {
     (async () => {
@@ -37,7 +43,7 @@ export default function DashLayout({
     })();
   });
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <svg
@@ -55,8 +61,17 @@ export default function DashLayout({
 
   return (
     <>
-      <Logout />
-      {children}
+      <SidebarProvider>
+        <AppSidebar name={user.name} email={user.email} avatar={user.picture} />
+        <SidebarInset className="px-4">
+          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+            <div className="flex items-center gap-2">
+              <SidebarTrigger className="-ml-1" />
+            </div>
+          </header>
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
     </>
   );
 }

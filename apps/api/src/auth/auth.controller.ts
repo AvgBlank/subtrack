@@ -13,11 +13,15 @@ export const register: RequestHandler = async (req, res) => {
   const { name, email, password } = registerSchema.parse(req.body);
 
   // Handle registration
-  const refreshToken = await authServices.handleRegister(name, email, password);
+  const { user, refreshToken } = await authServices.handleRegister(
+    name,
+    email,
+    password,
+  );
 
   // Set cookies & send response
   setAuthCookie(res, refreshToken);
-  return res.status(CREATED).json({ message: "Registered successfully" });
+  return res.status(CREATED).json({ message: "Registered successfully", user });
 };
 
 export const login: RequestHandler = async (req, res) => {
@@ -25,11 +29,14 @@ export const login: RequestHandler = async (req, res) => {
   const { email, password } = loginSchema.parse(req.body);
 
   // Handle login
-  const refreshToken = await authServices.handleLogin(email, password);
+  const { user, refreshToken } = await authServices.handleLogin(
+    email,
+    password,
+  );
 
   // Set cookies & send response
   setAuthCookie(res, refreshToken);
-  return res.json({ message: "Login successful" });
+  return res.json({ message: "Login successful", user });
 };
 
 export const googleOAuth: RequestHandler = async (req, res) => {
@@ -37,11 +44,11 @@ export const googleOAuth: RequestHandler = async (req, res) => {
   const { code } = oAuthSchema.parse(req.body);
 
   // Handle Google OAuth
-  const refreshToken = await authServices.handleGoogleOAuth(code);
+  const { user, refreshToken } = await authServices.handleGoogleOAuth(code);
 
   // Set cookies & send response
   setAuthCookie(res, refreshToken);
-  return res.json({ message: "Login successful" });
+  return res.json({ message: "Login successful", user });
 };
 
 export const verify: RequestHandler = async (req, res) => {

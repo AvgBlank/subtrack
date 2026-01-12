@@ -34,6 +34,8 @@ export const handleRegister = async (
     },
     select: {
       id: true,
+      name: true,
+      email: true,
     },
   });
 
@@ -42,7 +44,7 @@ export const handleRegister = async (
     userId: user.id,
   };
   const refreshToken = await generateRefreshToken(payload);
-  return refreshToken;
+  return { user, refreshToken };
 };
 
 export const handleLogin = async (email: string, password: string) => {
@@ -51,6 +53,8 @@ export const handleLogin = async (email: string, password: string) => {
     where: { email: email.toLowerCase() },
     select: {
       id: true,
+      name: true,
+      email: true,
       password: true,
     },
   });
@@ -70,7 +74,13 @@ export const handleLogin = async (email: string, password: string) => {
     userId: user.id,
   };
   const refreshToken = await generateRefreshToken(payload);
-  return refreshToken;
+  return {
+    refreshToken,
+    user: {
+      ...user,
+      password: undefined,
+    },
+  };
 };
 
 export const handleGoogleOAuth = async (code: string) => {
@@ -102,13 +112,25 @@ export const handleGoogleOAuth = async (code: string) => {
   }
 
   // Check if user exists or create new user
-  let user = await prisma.user.findUnique({ where: { email } });
+  let user = await prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  });
   if (!user) {
     user = await prisma.user.create({
       data: {
         name: name ?? "Unknown User",
         email,
         password: null,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
       },
     });
   }
@@ -118,5 +140,5 @@ export const handleGoogleOAuth = async (code: string) => {
     userId: user.id,
   };
   const refreshToken = await generateRefreshToken(payload);
-  return refreshToken;
+  return { user, refreshToken };
 };

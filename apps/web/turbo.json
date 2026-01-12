@@ -1,0 +1,15 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["@subtrack/shared#build"]
+    },
+    "dev": {
+      "dependsOn": ["@subtrack/shared#build"]
+    },
+    "check-types": {
+      "dependsOn": ["@subtrack/shared#build"]
+    }
+  }
+}

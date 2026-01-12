@@ -7,26 +7,30 @@ import type {
 type AuthResponse =
   | {
       success: true;
+      data: {
+        user: {
+          id: string;
+          name: string;
+          email: string;
+        };
+      };
     }
   | {
       success: false;
       message: string;
     };
 
-export const verifyAuth = async (cookies: string) => {
+export const verifyAuth = async (): Promise<AuthResponse> => {
   try {
-    const { response } = await apiFetch("/api/auth/verify", {
-      headers: {
-        Cookie: cookies,
-      },
+    const { response, data } = await apiFetch("/api/auth/verify", {
       cache: "no-store",
     });
     if (response.ok) {
-      return true;
+      return { success: true, data };
     }
-    return false;
+    return { success: false, message: "Not authenticated" };
   } catch {
-    return false;
+    return { success: false, message: "Not authenticated" };
   }
 };
 
@@ -47,7 +51,7 @@ export const register = async (
         message: data.error || "Registration failed",
       };
     }
-    return { success: true };
+    return { success: true, data };
   } catch (error) {
     console.error(error);
     return { success: false, message: "Registration failed" };
@@ -69,7 +73,7 @@ export const login = async (values: LoginSchema): Promise<AuthResponse> => {
         message: data.error || "Login failed",
       };
     }
-    return { success: true };
+    return { success: true, data };
   } catch (error) {
     console.error(error);
     return { success: false, message: "Login failed" };
@@ -99,7 +103,7 @@ export const googleOAuth = async (
         message: data.error || "OAuth Error",
       };
     }
-    return { success: true };
+    return { success: true, data };
   } catch (error) {
     console.error(error);
     return { success: false, message: "OAuth Error" };

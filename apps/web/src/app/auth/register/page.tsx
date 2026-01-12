@@ -18,9 +18,11 @@ import { toast } from "sonner";
 import { register } from "@/lib/api/auth";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useAuthActions } from "@/store/auth-store";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const setAuth = useAuthActions().setAuth;
 
   const form = useForm({
     defaultValues: {
@@ -38,6 +40,7 @@ const Register = () => {
         return;
       }
 
+      setAuth(result.data.user);
       redirect("/dashboard");
     },
   });

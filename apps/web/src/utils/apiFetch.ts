@@ -7,7 +7,7 @@ const safeJson = async (response: Response) => {
 export default async function apiFetch(url: string, options: RequestInit = {}) {
   const response = await fetch(`${BASE_API_URL}${url}`, {
     ...options,
-    credentials: 'include',
+    credentials: "include",
   });
   const data = await safeJson(response);
   return { response, data };

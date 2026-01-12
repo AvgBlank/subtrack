@@ -1,5 +1,7 @@
 "use client";
+
 import { googleOAuth } from "@/lib/api/auth";
+import { useAuthStore } from "@/store/auth-store";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -9,20 +11,24 @@ export default function OAuthSuccessPage() {
     (async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const code = urlParams.get("code");
+      const {
+        actions: { setAuth },
+      } = useAuthStore.getState();
 
-      const response = await googleOAuth(code);
+      const result = await googleOAuth(code);
 
-      if (response) {
-        redirect("/dashboard")
+      if (result.success) {
+        setAuth(result.data.user);
+        redirect("/dashboard");
       } else {
         toast("OAuth process failed");
-        redirect("/auth/login")
+        redirect("/auth/login");
       }
     })();
   }, []);
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="animate-spin fill-black dark:fill-white"

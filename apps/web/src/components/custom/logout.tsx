@@ -11,7 +11,7 @@ export default function Logout() {
   const handleLogout = async () => {
     await logout();
     redirect("/auth/login");
-  }
+  };
 
   return (
     <Button variant="outline" size="icon" onClick={handleLogout}>

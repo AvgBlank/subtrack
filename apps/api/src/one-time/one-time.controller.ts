@@ -5,7 +5,12 @@ import {
 } from "@subtrack/shared/schemas/one-time";
 import * as oneTimeServices from "@/one-time/one-time.services";
 import AppError from "@/shared/utils/AppError";
-import { CREATED, NOT_FOUND, OK, BAD_REQUEST } from "@subtrack/shared/httpStatusCodes";
+import {
+  CREATED,
+  NOT_FOUND,
+  OK,
+  BAD_REQUEST,
+} from "@subtrack/shared/httpStatusCodes";
 
 export const getByMonth: RequestHandler = async (req, res) => {
   const userId = req.user!.id;
@@ -16,7 +21,11 @@ export const getByMonth: RequestHandler = async (req, res) => {
     throw new AppError(BAD_REQUEST, "Invalid month or year");
   }
 
-  const transactions = await oneTimeServices.getOneTimeByMonth(userId, month, year);
+  const transactions = await oneTimeServices.getOneTimeByMonth(
+    userId,
+    month,
+    year,
+  );
   res.json(transactions);
 };
 

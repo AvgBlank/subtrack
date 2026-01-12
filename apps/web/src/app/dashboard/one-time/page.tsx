@@ -46,7 +46,7 @@ export default function OneTimePage() {
   const transactionCount = summary?.oneTime.oneTimeTransactionCount ?? 0;
   const categorySummary = summary?.oneTime.categorySummary ?? {};
   const topCategory = Object.entries(categorySummary).sort(
-    (a, b) => Number(b[1].totalAmount) - Number(a[1].totalAmount)
+    (a, b) => Number(b[1].totalAmount) - Number(a[1].totalAmount),
   )[0];
 
   const handlePreviousMonth = () => {
@@ -115,11 +115,7 @@ export default function OneTimePage() {
 
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handlePreviousMonth}
-            >
+            <Button variant="outline" size="icon" onClick={handlePreviousMonth}>
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Previous month</span>
             </Button>
@@ -158,7 +154,9 @@ export default function OneTimePage() {
         <div className="rounded-lg border bg-card p-4">
           <p className="text-muted-foreground text-sm">Average Per Expense</p>
           <p className="text-2xl font-bold">
-            {formatCurrency(transactionCount > 0 ? monthlyTotal / transactionCount : 0)}
+            {formatCurrency(
+              transactionCount > 0 ? monthlyTotal / transactionCount : 0,
+            )}
           </p>
           <p className="text-muted-foreground text-xs">This month</p>
         </div>
@@ -168,7 +166,9 @@ export default function OneTimePage() {
             {topCategory ? topCategory[0] : "—"}
           </p>
           <p className="text-muted-foreground text-xs">
-            {topCategory ? formatCurrency(Number(topCategory[1].totalAmount)) : "No expenses"}
+            {topCategory
+              ? formatCurrency(Number(topCategory[1].totalAmount))
+              : "No expenses"}
           </p>
         </div>
       </div>

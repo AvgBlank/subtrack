@@ -92,9 +92,13 @@ export default function SavingsPage() {
   }
 
   // Extract summary data
-  const totalRequiredSavings = Number(summary?.savings.totalRequiredSavings ?? 0);
+  const totalRequiredSavings = Number(
+    summary?.savings.totalRequiredSavings ?? 0,
+  );
   const totalAvailableCash = Number(summary?.savings.totalAvailableCash ?? 0);
-  const remainingAfterSavings = Number(summary?.savings.remainingAfterSavings ?? 0);
+  const remainingAfterSavings = Number(
+    summary?.savings.remainingAfterSavings ?? 0,
+  );
   const isRemainingNegative = remainingAfterSavings < 0;
 
   return (

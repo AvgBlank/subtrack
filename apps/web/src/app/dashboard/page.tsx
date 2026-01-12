@@ -82,7 +82,10 @@ const Dashboard = () => {
         totalSavings={totalSavings}
       />
       <RecurringSnapshot bills={billsData} subscriptions={subscriptionsData} />
-      <SavingsSnapshot goals={savingsGoals} />
+      <SavingsSnapshot
+        goals={savingsGoals}
+        totalRequiredSavings={totalSavings}
+      />
       <CanISpend />
     </div>
   );

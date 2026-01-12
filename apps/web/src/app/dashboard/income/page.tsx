@@ -124,11 +124,13 @@ export default function IncomePage() {
         </div>
         <div className="rounded-lg border bg-card p-4">
           <p className="text-muted-foreground text-sm">Net Cash Flow</p>
-          <p className={`text-2xl font-bold ${
-            Number(summary?.cashFlow.netCashFlow ?? 0) >= 0
-              ? "text-green-600 dark:text-green-400"
-              : "text-red-600 dark:text-red-400"
-          }`}>
+          <p
+            className={`text-2xl font-bold ${
+              Number(summary?.cashFlow.netCashFlow ?? 0) >= 0
+                ? "text-green-600 dark:text-green-400"
+                : "text-red-600 dark:text-red-400"
+            }`}
+          >
             {formatCurrency(Number(summary?.cashFlow.netCashFlow ?? 0))}
           </p>
           <p className="text-muted-foreground text-xs">After all expenses</p>

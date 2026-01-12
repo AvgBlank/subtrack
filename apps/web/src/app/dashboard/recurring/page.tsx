@@ -52,7 +52,9 @@ export default function RecurringPage() {
   // Get totals from summary (normalized to monthly)
   const totalMonthly = Number(summary?.recurring.totals.total ?? 0);
   const totalBills = Number(summary?.recurring.totals.bills ?? 0);
-  const totalSubscriptions = Number(summary?.recurring.totals.subscriptions ?? 0);
+  const totalSubscriptions = Number(
+    summary?.recurring.totals.subscriptions ?? 0,
+  );
   const billsCount = summary?.recurring.counts.bills ?? 0;
   const subscriptionsCount = summary?.recurring.counts.subscriptions ?? 0;
 
@@ -132,7 +134,8 @@ export default function RecurringPage() {
           <p className="text-muted-foreground text-sm">Total Monthly</p>
           <p className="text-2xl font-bold">{formatCurrency(totalMonthly)}</p>
           <p className="text-muted-foreground text-xs">
-            {billsCount + subscriptionsCount} active commitment{billsCount + subscriptionsCount !== 1 ? "s" : ""}
+            {billsCount + subscriptionsCount} active commitment
+            {billsCount + subscriptionsCount !== 1 ? "s" : ""}
           </p>
         </div>
         <div className="rounded-lg border bg-card p-4">
@@ -144,9 +147,12 @@ export default function RecurringPage() {
         </div>
         <div className="rounded-lg border bg-card p-4">
           <p className="text-muted-foreground text-sm">Subscriptions</p>
-          <p className="text-2xl font-bold">{formatCurrency(totalSubscriptions)}</p>
+          <p className="text-2xl font-bold">
+            {formatCurrency(totalSubscriptions)}
+          </p>
           <p className="text-muted-foreground text-xs">
-            {subscriptionsCount} active subscription{subscriptionsCount !== 1 ? "s" : ""}
+            {subscriptionsCount} active subscription
+            {subscriptionsCount !== 1 ? "s" : ""}
           </p>
         </div>
       </div>

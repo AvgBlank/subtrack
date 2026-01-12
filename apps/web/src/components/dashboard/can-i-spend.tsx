@@ -92,13 +92,11 @@ export function CanISpend() {
               `}
             >
               <div
-                className={`                  "flex h-10 w-10 items-center justify-center rounded-full",
-                ${
+                className={`flex h-10 w-10 items-center justify-center rounded-full ${
                   result.canSpend
                     ? "bg-green-100 dark:bg-green-900"
                     : "bg-red-100 dark:bg-red-900"
-                }
-              `}
+                }`}
               >
                 {result.canSpend ? (
                   <Check className="h-5 w-5 text-green-600 dark:text-green-400" />

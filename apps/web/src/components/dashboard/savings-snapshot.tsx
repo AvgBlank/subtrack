@@ -17,24 +17,36 @@ type SavingsGoal = {
 
 type SavingsSnapshotProps = {
   goals: SavingsGoal[];
+  totalRequiredSavings: number;
 };
 
 function getStatus(goal: SavingsGoal): {
   label: string;
   color: string;
 } {
-  // If progress is ahead of schedule based on months remaining
-  const expectedProgress =
-    goal.monthsRemaining > 0
-      ? 100 - (goal.monthsRemaining / (goal.monthsRemaining + 12)) * 100
-      : 100;
-
-  if (goal.progressPercentage >= expectedProgress) {
+  // Goal already completed
+  if (goal.progressPercentage >= 100) {
     return { label: "On track", color: "text-green-600 dark:text-green-400" };
-  } else if (goal.progressPercentage >= expectedProgress * 0.7) {
+  }
+
+  // Deadline has passed without reaching goal
+  if (goal.monthsRemaining <= 0) {
+    return { label: "At risk", color: "text-red-600 dark:text-red-400" };
+  }
+
+  // Calculate required monthly progress percentage
+  const remainingPercentage = 100 - goal.progressPercentage;
+  const requiredMonthlyProgress = remainingPercentage / goal.monthsRemaining;
+
+  // If need more than ~15% per month, it's at-risk
+  // If need between 8-15% per month, it's tight
+  // Otherwise, on-track
+  if (requiredMonthlyProgress > 15) {
+    return { label: "At risk", color: "text-red-600 dark:text-red-400" };
+  } else if (requiredMonthlyProgress > 8) {
     return { label: "Tight", color: "text-yellow-600 dark:text-yellow-400" };
   } else {
-    return { label: "At risk", color: "text-red-600 dark:text-red-400" };
+    return { label: "On track", color: "text-green-600 dark:text-green-400" };
   }
 }
 
@@ -64,13 +76,21 @@ function SavingsGoalItem({ goal }: { goal: SavingsGoal }) {
   );
 }
 
-export function SavingsSnapshot({ goals }: SavingsSnapshotProps) {
+export function SavingsSnapshot({
+  goals,
+  totalRequiredSavings,
+}: SavingsSnapshotProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <Target className="text-muted-foreground h-5 w-5" />
-          <CardTitle>Savings Goals</CardTitle>
+          <div>
+            <CardTitle>Savings Goals</CardTitle>
+            <p className="text-muted-foreground text-sm">
+              {formatCurrency(totalRequiredSavings)}/mo required
+            </p>
+          </div>
         </div>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/dashboard/savings">Manage goals</Link>

@@ -36,7 +36,10 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-export function OneTimeTable({ transactions, onEditAction }: OneTimeTableProps) {
+export function OneTimeTable({
+  transactions,
+  onEditAction,
+}: OneTimeTableProps) {
   if (transactions.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">

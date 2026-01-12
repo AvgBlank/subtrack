@@ -299,9 +299,10 @@ async function main() {
       }
 
       // Jane gets most transactions in Jan 2026
-      const transactionDate = isJane && i < 45
-        ? randomDate(new Date("2026-01-01"), new Date("2026-01-12"))
-        : randomDate(new Date("2025-01-01"), new Date("2026-01-12"));
+      const transactionDate =
+        isJane && i < 45
+          ? randomDate(new Date("2026-01-01"), new Date("2026-01-12"))
+          : randomDate(new Date("2025-01-01"), new Date("2026-01-12"));
 
       await prisma.oneTimeTransaction.create({
         data: {
@@ -377,7 +378,10 @@ async function main() {
       // Current amount is 0-90% of target
       const currentAmount = randomDecimal(0, targetAmount * 0.9);
       // Monthly contribution is 1-5% of target amount
-      const monthlyContribution = randomDecimal(targetAmount * 0.01, targetAmount * 0.05);
+      const monthlyContribution = randomDecimal(
+        targetAmount * 0.01,
+        targetAmount * 0.05,
+      );
 
       await prisma.savingsGoal.create({
         data: {

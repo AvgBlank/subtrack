@@ -2,6 +2,7 @@
 
 import { verifyAuth } from "@/lib/api/auth";
 import { useAuthStore, useRequiredAuthUser } from "@/store/auth-store";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
@@ -18,6 +19,7 @@ export default function DashLayout({
 }>) {
   const [loading, setLoading] = useState(true);
   const user = useRequiredAuthUser();
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     (async () => {
@@ -61,17 +63,23 @@ export default function DashLayout({
 
   return (
     <>
-      <SidebarProvider>
-        <AppSidebar name={user.name} email={user.email} avatar={user.picture} />
-        <SidebarInset className="px-4">
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2">
-              <SidebarTrigger className="-ml-1" />
-            </div>
-          </header>
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
+      <QueryClientProvider client={queryClient}>
+        <SidebarProvider>
+          <AppSidebar
+            name={user.name}
+            email={user.email}
+            avatar={user.picture}
+          />
+          <SidebarInset className="px-4">
+            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger className="-ml-1" />
+              </div>
+            </header>
+            {children}
+          </SidebarInset>
+        </SidebarProvider>
+      </QueryClientProvider>
     </>
   );
 }

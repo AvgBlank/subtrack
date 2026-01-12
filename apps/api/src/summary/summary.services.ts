@@ -254,29 +254,6 @@ export const getCashFlowSummary = async (
   return cashFlowSummary;
 };
 
-export const getMonthlySummary = async (
-  userId: string,
-  month: number,
-  year: number,
-): Promise<MonthlySummary> => {
-  // Calculate all summaries
-  const [recurringSummary, incomeSummary, oneTimeSummary] = await Promise.all([
-    getRecurringSummary(userId, month, year),
-    getIncomeSummary(userId, month, year),
-    getOneTimeSummary(userId, month, year),
-  ]);
-
-  // Merge all data into final summary
-  const monthlySummary: MonthlySummary = {
-    period: { month, year },
-    recurring: recurringSummary,
-    income: incomeSummary,
-    oneTime: oneTimeSummary,
-    cashFlow: await cashFlow(recurringSummary, incomeSummary, oneTimeSummary),
-  };
-  return monthlySummary;
-};
-
 export const getSavingsGoalSummary = async (
   userId: string,
 ): Promise<SavingsGoalSummary[]> => {
@@ -358,4 +335,28 @@ export const getCanISpend = async (userId: string, amount: Decimal) => {
     canSpend: remainingAfterSavings.gte(0),
     remainingAfterSpend: remainingAfterSavings.toNumber(),
   };
+};
+
+export const getMonthlySummary = async (
+  userId: string,
+  month: number,
+  year: number,
+): Promise<MonthlySummary> => {
+  // Calculate all summaries
+  const [recurringSummary, incomeSummary, oneTimeSummary] = await Promise.all([
+    getRecurringSummary(userId, month, year),
+    getIncomeSummary(userId, month, year),
+    getOneTimeSummary(userId, month, year),
+  ]);
+
+  // Merge all data into final summary
+  const monthlySummary: MonthlySummary = {
+    period: { month, year },
+    recurring: recurringSummary,
+    income: incomeSummary,
+    oneTime: oneTimeSummary,
+    cashFlow: await cashFlow(recurringSummary, incomeSummary, oneTimeSummary),
+    savings: await getSavingsSummary(userId),
+  };
+  return monthlySummary;
 };

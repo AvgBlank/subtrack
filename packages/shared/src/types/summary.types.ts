@@ -82,16 +82,6 @@ export type CashFlowSummary = {
   netCashFlow: Decimal;
 };
 
-export type MonthlySummary = {
-  period: {
-    month: number;
-    year: number;
-  };
-  recurring: RecurringSummary;
-  income: IncomeSummary;
-  oneTime: OneTimeSummary;
-  cashFlow: CashFlowSummary;
-};
 
 export type SavingsGoalSummary = {
   id: string;
@@ -114,4 +104,16 @@ export type SavingsSummary = {
   totalAvailableCash: Decimal;
   remainingAfterSavings: Decimal;
   savingsGoals: SavingsGoalSummary[];
+};
+
+export type MonthlySummary = {
+  period: {
+    month: number;
+    year: number;
+  };
+  recurring: RecurringSummary;
+  income: IncomeSummary;
+  oneTime: OneTimeSummary;
+  cashFlow: CashFlowSummary;
+  savings: SavingsSummary;
 };

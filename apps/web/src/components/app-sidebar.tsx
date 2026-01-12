@@ -2,11 +2,10 @@
 
 import * as React from "react";
 import {
-  BookOpen,
-  Bot,
+  ChartColumn,
   GalleryVerticalEnd,
-  Settings2,
-  SquareTerminal,
+  LayoutDashboard,
+  SquareKanban,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -39,27 +38,31 @@ export function AppSidebar({
       name: "Subtrack",
       logo: GalleryVerticalEnd,
     },
-    navMain: [
+    navMain: {
+      title: "Overview",
+      url: "/dashboard",
+      icon: SquareKanban,
+    },
+    navItems: [
       {
-        title: "Playground",
+        title: "Manage",
         url: "#",
-        icon: SquareTerminal,
-        isActive: true,
+        icon: LayoutDashboard,
+        items: [
+          { title: "Recurring", url: "/dashboard/recurring" },
+          { title: "One Time", url: "/dashboard/one-time" },
+          { title: "Income", url: "/dashboard/income" },
+          { title: "Savings", url: "/dashboard/savings" },
+        ],
       },
       {
-        title: "Models",
+        title: "Insights",
         url: "#",
-        icon: Bot,
-      },
-      {
-        title: "Documentation",
-        url: "#",
-        icon: BookOpen,
-      },
-      {
-        title: "Settings",
-        url: "#",
-        icon: Settings2,
+        icon: ChartColumn,
+        items: [
+          { title: "Analytics", url: "/dashboard/analytics" },
+          { title: "Exports", url: "/dashboard/analytics" },
+        ],
       },
     ],
   };
@@ -70,7 +73,7 @@ export function AppSidebar({
         <NavOrg org={data.org} />
       </SidebarHeader>
       <SidebarContent className="pt-3 borer-sidebar-border pb-3 border-b">
-        <NavMain items={data.navMain} />
+        <NavMain main={data.navMain} items={data.navItems} />
       </SidebarContent>
       <SidebarFooter className="pt-3">
         <NavUser user={data.user} />

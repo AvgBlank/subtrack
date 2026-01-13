@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm } from "@tanstack/react-form";
 import { createOneTimeFormSchema } from "@subtrack/shared/schemas/one-time";
 import {
@@ -36,6 +36,8 @@ type AddEditOneTimeModalProps = {
   onOpenChangeAction: (open: boolean) => void;
   transaction?: OneTimeTransaction | null;
   onSuccessAction: () => void;
+  defaultMonth?: number;
+  defaultYear?: number;
 };
 
 const categories = [
@@ -63,17 +65,28 @@ export function AddEditOneTimeModal({
   onOpenChangeAction,
   transaction,
   onSuccessAction,
+  defaultMonth,
+  defaultYear,
 }: AddEditOneTimeModalProps) {
   const isEditing = !!transaction;
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // Generate default date based on provided month/year or current date
+  const getDefaultDate = useCallback((): string => {
+    if (defaultMonth && defaultYear) {
+      const date = new Date(defaultYear, defaultMonth - 1, 15); // Middle of month
+      return date.toISOString().split("T")[0];
+    }
+    return new Date().toISOString().split("T")[0];
+  }, [defaultMonth, defaultYear]);
 
   const form = useForm({
     defaultValues: {
       name: transaction?.name || "",
       amount: transaction?.amount || 0,
       category: transaction?.category || "",
-      date: formatDateForInput(transaction?.date),
+      date: formatDateForInput(transaction?.date) || getDefaultDate(),
     },
     validators: {
       onChange: createOneTimeFormSchema,
@@ -109,12 +122,17 @@ export function AddEditOneTimeModal({
       form.setFieldValue("name", transaction?.name || "");
       form.setFieldValue("amount", transaction?.amount || 0);
       form.setFieldValue("category", transaction?.category || "");
-      form.setFieldValue("date", formatDateForInput(transaction?.date));
+      form.setFieldValue(
+        "date",
+        transaction?.date
+          ? formatDateForInput(transaction.date)
+          : getDefaultDate(),
+      );
       setShowDeleteConfirm(false);
     } else {
       form.reset();
     }
-  }, [open, transaction, form]);
+  }, [open, transaction, form, defaultMonth, defaultYear, getDefaultDate]);
 
   const handleDelete = async () => {
     if (!transaction) return;

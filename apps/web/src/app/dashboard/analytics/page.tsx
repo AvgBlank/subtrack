@@ -13,48 +13,94 @@ import { ExpenseBreakdownPie } from "@/components/analytics/expense-breakdown-pi
 import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
 import { CurrentMonthStats } from "@/components/analytics/current-month-stats";
 import { MonthComparisonRadar } from "@/components/analytics/month-comparison-radar";
-import { BarChart3, AlertCircle } from "lucide-react";
+import { BarChart3 } from "lucide-react";
+import { ErrorState } from "@/components/ui/error-state";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AnalyticsPageSkeleton } from "@/components/ui/loading-skeletons";
 
 type TimeRange = 3 | 6 | 12;
 
 export default function AnalyticsPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>(6);
 
-  const { data: analyticsData, isLoading: analyticsLoading } = useQuery({
+  const {
+    data: analyticsData,
+    isLoading: analyticsLoading,
+    refetch: refetchAnalytics,
+  } = useQuery({
     queryKey: ["analytics", timeRange],
     queryFn: () => getAnalyticsData(timeRange),
   });
 
-  const { data: summary, isLoading: summaryLoading } = useQuery({
+  const {
+    data: summary,
+    isLoading: summaryLoading,
+    refetch: refetchSummary,
+  } = useQuery({
     queryKey: ["summary"],
     queryFn: () => getSummary(),
   });
 
   const isLoading = analyticsLoading || summaryLoading;
 
+  // Page header component
+  const pageHeader = (
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/20 dark:bg-violet-500/10">
+          <BarChart3 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Analytics</h1>
+          <p className="text-sm text-muted-foreground">
+            Trends and spending patterns
+          </p>
+        </div>
+      </div>
+      <AnalyticsControls
+        selectedRange={timeRange}
+        onRangeChange={setTimeRange}
+      />
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-foreground"
-          width="32"
-          height="32"
-          viewBox="0 0 256 256"
-        >
-          <path d="M236,128a108,108,0,0,1-216,0c0-42.52,24.73-81.34,63-98.9A12,12,0,1,1,93,50.91C63.24,64.57,44,94.83,44,128a84,84,0,0,0,168,0c0-33.17-19.24-63.43-49-77.09A12,12,0,1,1,173,29.1C211.27,46.66,236,85.48,236,128Z"></path>
-        </svg>
+      <div className="container mx-auto space-y-6">
+        {pageHeader}
+        <AnalyticsPageSkeleton />
       </div>
     );
   }
 
   if (!analyticsData || !summary) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 dark:bg-red-500/10">
-          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
-        </div>
-        <p className="text-muted-foreground">Failed to load analytics data</p>
+      <div className="container mx-auto space-y-6">
+        {pageHeader}
+        <ErrorState
+          title="Failed to load analytics"
+          message="We couldn't load your analytics data. Please try again."
+          onRetry={() => {
+            refetchAnalytics();
+            refetchSummary();
+          }}
+          className="min-h-[40vh]"
+        />
+      </div>
+    );
+  }
+
+  // Check if not enough data for analytics
+  if (analyticsData.months.length < 2) {
+    return (
+      <div className="container mx-auto space-y-6">
+        {pageHeader}
+        <EmptyState
+          icon={BarChart3}
+          title="Not enough data yet"
+          description="Analytics require at least 2 months of data. Keep tracking your finances and check back soon for insights and trends."
+          iconClassName="bg-violet-500/20 dark:bg-violet-500/10"
+        />
       </div>
     );
   }
@@ -69,23 +115,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="container mx-auto space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/20 dark:bg-violet-500/10">
-            <BarChart3 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">Analytics</h1>
-            <p className="text-sm text-muted-foreground">
-              Trends and spending patterns
-            </p>
-          </div>
-        </div>
-        <AnalyticsControls
-          selectedRange={timeRange}
-          onRangeChange={setTimeRange}
-        />
-      </div>
+      {pageHeader}
 
       <CurrentMonthStats
         currentMonth={currentMonth}

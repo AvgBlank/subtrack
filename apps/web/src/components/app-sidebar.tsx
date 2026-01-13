@@ -1,11 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ChartColumn,
-  LayoutDashboard,
-  SquareKanban,
-} from "lucide-react";
+import { ChartColumn, LayoutDashboard, SquareKanban } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";

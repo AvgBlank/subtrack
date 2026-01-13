@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 export default function AuthLayout({
   children,
@@ -44,15 +45,7 @@ export default function AuthLayout({
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-foreground"
-          width="32"
-          height="32"
-          viewBox="0 0 256 256"
-        >
-          <path d="M236,128a108,108,0,0,1-216,0c0-42.52,24.73-81.34,63-98.9A12,12,0,1,1,93,50.91C63.24,64.57,44,94.83,44,128a84,84,0,0,0,168,0c0-33.17-19.24-63.43-49-77.09A12,12,0,1,1,173,29.1C211.27,46.66,236,85.48,236,128Z"></path>
-        </svg>
+        <LoadingSpinner size="lg" />
       </div>
     );
   }
@@ -67,8 +60,16 @@ export default function AuthLayout({
       <nav className="relative z-10 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/favicon.svg" alt="Subtrack" width={32} height={32} className="h-8 w-8" />
-            <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">Subtrack</span>
+            <Image
+              src="/favicon.svg"
+              alt="Subtrack"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
+              Subtrack
+            </span>
           </Link>
           <Button
             variant="ghost"

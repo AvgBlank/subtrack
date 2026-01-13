@@ -80,7 +80,10 @@ const Register = () => {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid} className="gap-2">
-                      <Label htmlFor={field.name} className="text-sm font-medium">
+                      <Label
+                        htmlFor={field.name}
+                        className="text-sm font-medium"
+                      >
                         Full Name
                       </Label>
                       <div className="relative">
@@ -111,7 +114,10 @@ const Register = () => {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid} className="gap-2">
-                      <Label htmlFor={field.name} className="text-sm font-medium">
+                      <Label
+                        htmlFor={field.name}
+                        className="text-sm font-medium"
+                      >
                         Email
                       </Label>
                       <div className="relative">
@@ -142,7 +148,10 @@ const Register = () => {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid} className="gap-2">
-                      <Label htmlFor={field.name} className="text-sm font-medium">
+                      <Label
+                        htmlFor={field.name}
+                        className="text-sm font-medium"
+                      >
                         Password
                       </Label>
                       <div className="relative">
@@ -180,7 +189,7 @@ const Register = () => {
                   );
                 }}
               </form.Field>
-              
+
               <Button type="submit" className="w-full gap-2" size="lg">
                 Create Account
                 <ArrowRight className="h-4 w-4" />

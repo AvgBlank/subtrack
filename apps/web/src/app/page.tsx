@@ -68,22 +68,26 @@ export default function LandingPage() {
     {
       icon: Wallet,
       title: "Remaining Cash",
-      description: "See exactly what you have left after all expenses and savings.",
+      description:
+        "See exactly what you have left after all expenses and savings.",
     },
     {
       icon: ShoppingCart,
       title: "Can I Spend This?",
-      description: "Quick check if you can afford a purchase without breaking budget.",
+      description:
+        "Quick check if you can afford a purchase without breaking budget.",
     },
     {
       icon: PiggyBank,
       title: "Savings Snapshot",
-      description: "Track multiple savings goals with progress bars and timelines.",
+      description:
+        "Track multiple savings goals with progress bars and timelines.",
     },
     {
       icon: TrendingUp,
       title: "Month Comparison",
-      description: "Compare spending across months with radar charts and trends.",
+      description:
+        "Compare spending across months with radar charts and trends.",
     },
   ];
 
@@ -103,8 +107,16 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/favicon.svg" alt="Subtrack" width={32} height={32} className="h-8 w-8" />
-            <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">Subtrack</span>
+            <Image
+              src="/favicon.svg"
+              alt="Subtrack"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
+            <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
+              Subtrack
+            </span>
           </Link>
           <div className="flex items-center gap-4">
             <Button
@@ -142,8 +154,9 @@ export default function LandingPage() {
             </span>
           </h1>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
-            Track your income, manage recurring bills and subscriptions, set savings goals, and
-            visualize your spending patterns — all in one beautiful dashboard.
+            Track your income, manage recurring bills and subscriptions, set
+            savings goals, and visualize your spending patterns — all in one
+            beautiful dashboard.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/auth/register">
@@ -168,10 +181,35 @@ export default function LandingPage() {
           <div className="relative rounded-2xl border bg-card p-4 shadow-2xl">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {[
-                { label: "Income", value: "₹85,000", icon: IndianRupee, color: "text-emerald-600 dark:text-emerald-400", iconBg: "bg-emerald-500/10" },
-                { label: "Recurring", value: "₹32,450", icon: Repeat, color: "text-blue-600 dark:text-blue-400", iconBg: "bg-blue-500/10" },
-                { label: "One-time", value: "₹8,200", icon: CreditCard, color: "text-orange-600 dark:text-orange-400", iconBg: "bg-orange-500/10" },
-                { label: "Remaining", value: "₹29,350", icon: Wallet, color: "text-emerald-600 dark:text-emerald-400", iconBg: "bg-violet-500/10", iconColor: "text-violet-600 dark:text-violet-400" },
+                {
+                  label: "Income",
+                  value: "₹85,000",
+                  icon: IndianRupee,
+                  color: "text-emerald-600 dark:text-emerald-400",
+                  iconBg: "bg-emerald-500/10",
+                },
+                {
+                  label: "Recurring",
+                  value: "₹32,450",
+                  icon: Repeat,
+                  color: "text-blue-600 dark:text-blue-400",
+                  iconBg: "bg-blue-500/10",
+                },
+                {
+                  label: "One-time",
+                  value: "₹8,200",
+                  icon: CreditCard,
+                  color: "text-orange-600 dark:text-orange-400",
+                  iconBg: "bg-orange-500/10",
+                },
+                {
+                  label: "Remaining",
+                  value: "₹29,350",
+                  icon: Wallet,
+                  color: "text-emerald-600 dark:text-emerald-400",
+                  iconBg: "bg-violet-500/10",
+                  iconColor: "text-violet-600 dark:text-violet-400",
+                },
               ].map((card) => (
                 <div
                   key={card.label}
@@ -179,11 +217,19 @@ export default function LandingPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <span className="text-sm text-muted-foreground">{card.label}</span>
-                      <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
+                      <span className="text-sm text-muted-foreground">
+                        {card.label}
+                      </span>
+                      <p className={`text-2xl font-bold ${card.color}`}>
+                        {card.value}
+                      </p>
                     </div>
-                    <div className={`flex h-9 w-9 items-center justify-center rounded-full ${card.iconBg}`}>
-                      <card.icon className={`h-4 w-4 ${card.iconColor || card.color}`} />
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-full ${card.iconBg}`}
+                    >
+                      <card.icon
+                        className={`h-4 w-4 ${card.iconColor || card.color}`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -200,7 +246,10 @@ export default function LandingPage() {
                 <div className="p-4">
                   <div className="flex h-32 items-end justify-around gap-2">
                     {[40, 65, 45, 80, 55, 70, 90].map((height, i) => (
-                      <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                      <div
+                        key={i}
+                        className="flex flex-1 flex-col items-center gap-1"
+                      >
                         <div
                           className="w-full rounded-t bg-linear-to-t from-chart-1 to-chart-2"
                           style={{ height: `${height}%` }}
@@ -230,7 +279,9 @@ export default function LandingPage() {
                       <div key={goal.name}>
                         <div className="mb-1 flex justify-between text-sm">
                           <span>{goal.name}</span>
-                          <span className="text-muted-foreground">{goal.progress}%</span>
+                          <span className="text-muted-foreground">
+                            {goal.progress}%
+                          </span>
                         </div>
                         <div className="h-2 rounded-full bg-muted">
                           <div
@@ -252,15 +303,20 @@ export default function LandingPage() {
       <section className="border-y bg-muted/30 py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold">Everything you need to manage money</h2>
+            <h2 className="mb-4 text-3xl font-bold">
+              Everything you need to manage money
+            </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              Subtrack gives you complete visibility into your finances with powerful tracking,
-              analysis, and export tools.
+              Subtrack gives you complete visibility into your finances with
+              powerful tracking, analysis, and export tools.
             </p>
           </div>
           <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.title} className="border-0 bg-background shadow-sm">
+              <Card
+                key={feature.title}
+                className="border-0 bg-background shadow-sm"
+              >
                 <CardHeader>
                   <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
                     <feature.icon className="h-5 w-5 text-primary" />
@@ -268,7 +324,9 @@ export default function LandingPage() {
                   <CardTitle className="text-lg">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -280,10 +338,12 @@ export default function LandingPage() {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold">A dashboard that actually helps</h2>
+            <h2 className="mb-4 text-3xl font-bold">
+              A dashboard that actually helps
+            </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              No clutter, no confusion. Just the insights you need to make better financial
-              decisions every day.
+              No clutter, no confusion. Just the insights you need to make
+              better financial decisions every day.
             </p>
           </div>
           <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
@@ -294,7 +354,9 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="mb-1 font-semibold">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -311,8 +373,8 @@ export default function LandingPage() {
                 Visualize your spending with beautiful charts
               </h2>
               <p className="mb-6 text-muted-foreground">
-                Our analytics dashboard gives you deep insights into your financial habits with
-                interactive charts and comparisons.
+                Our analytics dashboard gives you deep insights into your
+                financial habits with interactive charts and comparisons.
               </p>
               <ul className="space-y-3">
                 {[
@@ -336,33 +398,75 @@ export default function LandingPage() {
               <div className="relative grid grid-cols-2 gap-4">
                 <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
                   <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
-                    <p className="text-sm text-muted-foreground">Expense Breakdown</p>
+                    <p className="text-sm text-muted-foreground">
+                      Expense Breakdown
+                    </p>
                   </div>
                   <div className="p-4">
                     <div className="relative mx-auto h-24 w-24">
-                      <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-1" strokeDasharray="125.6 251.2" />
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-2" strokeDasharray="75.4 251.2" strokeDashoffset="-125.6" />
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-3" strokeDasharray="50.2 251.2" strokeDashoffset="-201" />
+                      <svg
+                        viewBox="0 0 100 100"
+                        className="h-full w-full -rotate-90"
+                      >
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="20"
+                          className="text-chart-1"
+                          strokeDasharray="125.6 251.2"
+                        />
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="20"
+                          className="text-chart-2"
+                          strokeDasharray="75.4 251.2"
+                          strokeDashoffset="-125.6"
+                        />
+                        <circle
+                          cx="50"
+                          cy="50"
+                          r="40"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="20"
+                          className="text-chart-3"
+                          strokeDasharray="50.2 251.2"
+                          strokeDashoffset="-201"
+                        />
                       </svg>
                     </div>
                   </div>
                 </div>
                 <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
                   <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
-                    <p className="text-sm text-muted-foreground">Monthly Trend</p>
+                    <p className="text-sm text-muted-foreground">
+                      Monthly Trend
+                    </p>
                   </div>
                   <div className="p-4">
                     <div className="flex h-24 items-end justify-around gap-1">
                       {[30, 45, 60, 40, 75, 55].map((h, i) => (
-                        <div key={i} className="w-3 rounded-t bg-chart-2" style={{ height: `${h}%` }} />
+                        <div
+                          key={i}
+                          className="w-3 rounded-t bg-chart-2"
+                          style={{ height: `${h}%` }}
+                        />
                       ))}
                     </div>
                   </div>
                 </div>
                 <div className="col-span-2 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
                   <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
-                    <p className="text-sm text-muted-foreground">Category Comparison</p>
+                    <p className="text-sm text-muted-foreground">
+                      Category Comparison
+                    </p>
                   </div>
                   <div className="p-4">
                     <div className="space-y-2">
@@ -406,9 +510,18 @@ export default function LandingPage() {
                   </div>
                   <div className="space-y-3 p-4">
                     {[
-                      { name: "Monthly Summary", desc: "Income & expenses per month" },
-                      { name: "Recurring Details", desc: "Bills & subscriptions" },
-                      { name: "One-time Transactions", desc: "Individual expenses" },
+                      {
+                        name: "Monthly Summary",
+                        desc: "Income & expenses per month",
+                      },
+                      {
+                        name: "Recurring Details",
+                        desc: "Bills & subscriptions",
+                      },
+                      {
+                        name: "One-time Transactions",
+                        desc: "Individual expenses",
+                      },
                       { name: "Full Export", desc: "Everything in one file" },
                     ].map((opt) => (
                       <div
@@ -417,10 +530,14 @@ export default function LandingPage() {
                       >
                         <div>
                           <p className="text-sm font-medium">{opt.name}</p>
-                          <p className="text-xs text-muted-foreground">{opt.desc}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {opt.desc}
+                          </p>
                         </div>
                         <div className="flex gap-2">
-                          <span className="rounded bg-muted px-2 py-1 text-xs">CSV</span>
+                          <span className="rounded bg-muted px-2 py-1 text-xs">
+                            CSV
+                          </span>
                           <span className="rounded bg-cyan-500/10 px-2 py-1 text-xs text-cyan-600 dark:text-cyan-400">
                             XLSX
                           </span>
@@ -432,10 +549,13 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="order-1 lg:order-2">
-              <h2 className="mb-4 text-3xl font-bold">Export with smart Excel formulas</h2>
+              <h2 className="mb-4 text-3xl font-bold">
+                Export with smart Excel formulas
+              </h2>
               <p className="mb-6 text-muted-foreground">
-                Take your data anywhere. Export to CSV for simple viewing, or Excel with automatic
-                SUM, AVERAGE, and cross-sheet formulas that update when you edit.
+                Take your data anywhere. Export to CSV for simple viewing, or
+                Excel with automatic SUM, AVERAGE, and cross-sheet formulas that
+                update when you edit.
               </p>
               <ul className="space-y-3">
                 {[
@@ -461,9 +581,12 @@ export default function LandingPage() {
       <section className="border-y bg-muted/30 py-24">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold">Simple, transparent pricing</h2>
+            <h2 className="mb-4 text-3xl font-bold">
+              Simple, transparent pricing
+            </h2>
             <p className="mx-auto max-w-2xl text-muted-foreground">
-              Subtrack is completely free. No hidden fees, no premium tiers, no limits.
+              Subtrack is completely free. No hidden fees, no premium tiers, no
+              limits.
             </p>
           </div>
           <div className="mx-auto max-w-md">
@@ -533,11 +656,20 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-2">
-              <Image src="/favicon.svg" alt="Subtrack" width={32} height={32} className="h-8 w-8" />
-              <span className="font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">Subtrack</span>
+              <Image
+                src="/favicon.svg"
+                alt="Subtrack"
+                width={32}
+                height={32}
+                className="h-8 w-8"
+              />
+              <span className="font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">
+                Subtrack
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} Subtrack. Manage your finances with ease.
+              © {new Date().getFullYear()} Subtrack. Manage your finances with
+              ease.
             </p>
           </div>
         </div>

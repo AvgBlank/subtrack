@@ -16,12 +16,14 @@ type SavingsGoalCardProps = {
 const statusConfig = {
   "on-track": {
     label: "On track",
-    className: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+    className:
+      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
     progressColor: "bg-emerald-500",
   },
   tight: {
     label: "Tight",
-    className: "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
+    className:
+      "bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border-yellow-500/20",
     progressColor: "bg-yellow-500",
   },
   "at-risk": {
@@ -70,8 +72,8 @@ export function SavingsGoalCard({
               of {formatCurrency(goal.targetAmount)}
             </span>
           </div>
-          <Progress 
-            value={Math.min(goal.progressPercentage, 100)} 
+          <Progress
+            value={Math.min(goal.progressPercentage, 100)}
             className="h-2"
           />
           <p className="text-xs text-muted-foreground text-right">
@@ -94,9 +96,7 @@ export function SavingsGoalCard({
               <Calendar className="h-3 w-3" />
               Target date
             </div>
-            <p className="text-sm font-medium">
-              {formatDate(goal.targetDate)}
-            </p>
+            <p className="text-sm font-medium">{formatDate(goal.targetDate)}</p>
             <p className="text-xs text-muted-foreground">
               {goal.monthsRemaining > 0
                 ? `${goal.monthsRemaining} months left`
@@ -107,11 +107,7 @@ export function SavingsGoalCard({
       </div>
 
       <div className="flex justify-end gap-2 border-t border-border/50 bg-white/30 px-4 py-3 dark:bg-black/10">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => onEditAction(goal)}
-        >
+        <Button variant="ghost" size="sm" onClick={() => onEditAction(goal)}>
           <Pencil className="mr-2 h-4 w-4" />
           Edit
         </Button>

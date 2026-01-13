@@ -78,12 +78,17 @@ const normalizeToMonthly = (amount: Decimal, frequency: string): number => {
   return amount.toNumber();
 };
 
-const getMonthsInRange = (range: MonthRange): { month: number; year: number }[] => {
+const getMonthsInRange = (
+  range: MonthRange,
+): { month: number; year: number }[] => {
   const months: { month: number; year: number }[] = [];
   let { startMonth, startYear } = range;
   const { endMonth, endYear } = range;
 
-  while (startYear < endYear || (startYear === endYear && startMonth <= endMonth)) {
+  while (
+    startYear < endYear ||
+    (startYear === endYear && startMonth <= endMonth)
+  ) {
     months.push({ month: startMonth, year: startYear });
     startMonth++;
     if (startMonth > 12) {
@@ -97,7 +102,7 @@ const getMonthsInRange = (range: MonthRange): { month: number; year: number }[] 
 
 export const getMonthlySummaryData = async (
   userId: string,
-  range: MonthRange
+  range: MonthRange,
 ): Promise<MonthlySummaryRow[]> => {
   const months = getMonthsInRange(range);
   const rows: MonthlySummaryRow[] = [];
@@ -108,19 +113,19 @@ export const getMonthlySummaryData = async (
   });
   const totalIncome = incomeRecords.reduce(
     (sum, i) => sum + i.amount.toNumber(),
-    0
+    0,
   );
 
   // Get active savings goals and compute required monthly contribution
   const savingsGoals = await prisma.savingsGoal.findMany({
     where: { userId },
   });
-  
+
   const totalSavingsRequired = savingsGoals.reduce((sum, goal) => {
     const now = new Date();
     const monthsRemaining = Math.ceil(
       (goal.targetDate.getFullYear() - now.getFullYear()) * 12 +
-        (goal.targetDate.getMonth() - now.getMonth())
+        (goal.targetDate.getMonth() - now.getMonth()),
     );
     if (monthsRemaining <= 0) return sum;
     const remaining = goal.targetAmount.sub(goal.currentAmount);
@@ -152,7 +157,7 @@ export const getMonthlySummaryData = async (
 
     const oneTimeTotal = oneTime.reduce(
       (sum, t) => sum + t.amount.toNumber(),
-      0
+      0,
     );
 
     const totalExpenses = recurringTotal + oneTimeTotal;
@@ -174,7 +179,7 @@ export const getMonthlySummaryData = async (
 };
 
 export const getRecurringData = async (
-  userId: string
+  userId: string,
 ): Promise<RecurringExportRow[]> => {
   const transactions = await prisma.recurringTransactions.findMany({
     where: { userId },
@@ -194,7 +199,7 @@ export const getRecurringData = async (
 
 export const getOneTimeData = async (
   userId: string,
-  range: MonthRange
+  range: MonthRange,
 ): Promise<OneTimeExportRow[]> => {
   const startDate = new Date(range.startYear, range.startMonth - 1, 1);
   const endDate = new Date(range.endYear, range.endMonth, 0, 23, 59, 59, 999);
@@ -215,7 +220,9 @@ export const getOneTimeData = async (
   }));
 };
 
-export const getIncomeData = async (userId: string): Promise<IncomeExportRow[]> => {
+export const getIncomeData = async (
+  userId: string,
+): Promise<IncomeExportRow[]> => {
   const incomes = await prisma.income.findMany({
     where: { userId },
     orderBy: [{ isActive: "desc" }, { date: "desc" }],
@@ -240,19 +247,21 @@ const escapeCSVValue = (value: string | number): string => {
 
 const arrayToCSV = <T extends object>(
   data: T[],
-  headers: { key: keyof T; label: string }[]
+  headers: { key: keyof T; label: string }[],
 ): string => {
   if (data.length === 0) return "";
 
   const headerRow = headers.map((h) => escapeCSVValue(h.label)).join(",");
   const dataRows = data.map((row) =>
-    headers.map((h) => escapeCSVValue(row[h.key] as string | number)).join(",")
+    headers.map((h) => escapeCSVValue(row[h.key] as string | number)).join(","),
   );
 
   return [headerRow, ...dataRows].join("\n");
 };
 
-export const generateMonthlySummaryCSV = (data: MonthlySummaryRow[]): string => {
+export const generateMonthlySummaryCSV = (
+  data: MonthlySummaryRow[],
+): string => {
   return arrayToCSV(data, [
     { key: "month", label: "Month" },
     { key: "year", label: "Year" },

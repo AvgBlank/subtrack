@@ -90,6 +90,7 @@ export function IncomeTable({
                       onToggleStatusAction(income.id, checked)
                     }
                     disabled={isToggling === income.id}
+                    aria-label={`${income.isActive ? "Disable" : "Enable"} ${income.source}`}
                   />
                 </TableCell>
                 <TableCell>
@@ -97,8 +98,10 @@ export function IncomeTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onEditAction(income)}
+                    aria-label={`Edit ${income.source}`}
                   >
                     <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
                   </Button>
                 </TableCell>
               </TableRow>

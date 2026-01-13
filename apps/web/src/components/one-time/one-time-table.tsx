@@ -77,6 +77,7 @@ export function OneTimeTable({
                   variant="ghost"
                   size="icon"
                   onClick={() => onEditAction(transaction)}
+                  aria-label={`Edit ${transaction.name}`}
                 >
                   <Pencil className="h-4 w-4" />
                   <span className="sr-only">Edit</span>

@@ -132,6 +132,7 @@ export function RecurringTable({
                       onToggleStatusAction(transaction.id, checked)
                     }
                     disabled={isToggling === transaction.id}
+                    aria-label={`${transaction.isActive ? "Disable" : "Enable"} ${transaction.name}`}
                   />
                 </TableCell>
                 <TableCell>
@@ -139,6 +140,7 @@ export function RecurringTable({
                     variant="ghost"
                     size="icon"
                     onClick={() => onEditAction(transaction)}
+                    aria-label={`Edit ${transaction.name}`}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>

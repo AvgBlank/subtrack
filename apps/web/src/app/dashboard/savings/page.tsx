@@ -16,9 +16,18 @@ import { AddEditSavingsGoalModal } from "@/components/savings/add-edit-savings-g
 import { getSavingsGoals, deleteSavingsGoal } from "@/lib/api/savings";
 import { getSummary } from "@/lib/api/summary";
 import type { SavingsGoal } from "@/lib/api/savings";
-import { Plus, Target, Loader2, PiggyBank, Wallet, TrendingUp } from "lucide-react";
+import {
+  Plus,
+  Target,
+  Loader2,
+  PiggyBank,
+  Wallet,
+  TrendingUp,
+} from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { toast } from "sonner";
+import { ErrorState } from "@/components/ui/error-state";
+import { SavingsGoalsSkeleton } from "@/components/ui/loading-skeletons";
 
 export default function SavingsPage() {
   const queryClient = useQueryClient();
@@ -27,17 +36,28 @@ export default function SavingsPage() {
   const [deletingGoal, setDeletingGoal] = useState<SavingsGoal | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const { data: goals = [], isLoading: goalsLoading } = useQuery({
+  const {
+    data: goals = [],
+    isLoading: goalsLoading,
+    error: goalsError,
+    refetch: refetchGoals,
+  } = useQuery({
     queryKey: ["savings"],
     queryFn: getSavingsGoals,
   });
 
-  const { data: summary, isLoading: summaryLoading } = useQuery({
+  const {
+    data: summary,
+    isLoading: summaryLoading,
+    error: summaryError,
+    refetch: refetchSummary,
+  } = useQuery({
     queryKey: ["summary"],
     queryFn: () => getSummary(),
   });
 
   const isLoading = goalsLoading || summaryLoading;
+  const hasError = goalsError || summaryError;
 
   const handleEdit = (goal: SavingsGoal) => {
     setEditingGoal(goal);
@@ -75,18 +95,46 @@ export default function SavingsPage() {
     queryClient.invalidateQueries({ queryKey: ["summary"] });
   };
 
+  // Page header component
+  const pageHeader = (
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/20 dark:bg-teal-500/10">
+          <Target className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Savings</h1>
+          <p className="text-sm text-muted-foreground">Your financial goals</p>
+        </div>
+      </div>
+      <Button onClick={handleAdd} className="gap-2">
+        <Plus className="h-4 w-4" />
+        Add Goal
+      </Button>
+    </div>
+  );
+
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-foreground"
-          width="32"
-          height="32"
-          viewBox="0 0 256 256"
-        >
-          <path d="M236,128a108,108,0,0,1-216,0c0-42.52,24.73-81.34,63-98.9A12,12,0,1,1,93,50.91C63.24,64.57,44,94.83,44,128a84,84,0,0,0,168,0c0-33.17-19.24-63.43-49-77.09A12,12,0,1,1,173,29.1C211.27,46.66,236,85.48,236,128Z"></path>
-        </svg>
+      <div className="container mx-auto space-y-6">
+        {pageHeader}
+        <SavingsGoalsSkeleton />
+      </div>
+    );
+  }
+
+  if (hasError) {
+    return (
+      <div className="container mx-auto space-y-6">
+        {pageHeader}
+        <ErrorState
+          title="Failed to load savings"
+          message="We couldn't load your savings goals. Please try again."
+          onRetry={() => {
+            refetchGoals();
+            refetchSummary();
+          }}
+        />
       </div>
     );
   }
@@ -103,21 +151,7 @@ export default function SavingsPage() {
 
   return (
     <div className="container mx-auto space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/20 dark:bg-teal-500/10">
-            <Target className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold">Savings</h1>
-            <p className="text-sm text-muted-foreground">Your financial goals</p>
-          </div>
-        </div>
-        <Button onClick={handleAdd} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Add Goal
-        </Button>
-      </div>
+      {pageHeader}
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
@@ -170,12 +204,18 @@ export default function SavingsPage() {
                 {formatCurrency(remainingAfterSavings)}
               </p>
             </div>
-            <div className={`flex h-9 w-9 items-center justify-center rounded-full ${isRemainingNegative ? "bg-red-500/10" : "bg-emerald-500/10"}`}>
-              <TrendingUp className={`h-4 w-4 ${isRemainingNegative ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`} />
+            <div
+              className={`flex h-9 w-9 items-center justify-center rounded-full ${isRemainingNegative ? "bg-red-500/10" : "bg-emerald-500/10"}`}
+            >
+              <TrendingUp
+                className={`h-4 w-4 ${isRemainingNegative ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}
+              />
             </div>
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {isRemainingNegative ? "You need more income" : "Available to spend"}
+            {isRemainingNegative
+              ? "You need more income"
+              : "Available to spend"}
           </p>
         </div>
       </div>

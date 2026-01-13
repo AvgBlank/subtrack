@@ -79,7 +79,10 @@ const Login = () => {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid} className="gap-2">
-                      <Label htmlFor={field.name} className="text-sm font-medium">
+                      <Label
+                        htmlFor={field.name}
+                        className="text-sm font-medium"
+                      >
                         Email
                       </Label>
                       <div className="relative">
@@ -110,7 +113,10 @@ const Login = () => {
                     field.state.meta.isTouched && !field.state.meta.isValid;
                   return (
                     <Field data-invalid={isInvalid} className="gap-2">
-                      <Label htmlFor={field.name} className="text-sm font-medium">
+                      <Label
+                        htmlFor={field.name}
+                        className="text-sm font-medium"
+                      >
                         Password
                       </Label>
                       <div className="relative">

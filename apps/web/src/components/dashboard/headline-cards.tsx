@@ -62,12 +62,14 @@ export function HeadlineCards({
       value: remaining,
       icon: Wallet,
       iconBg: remaining >= 0 ? "bg-violet-500/10" : "bg-red-500/10",
-      iconColor: remaining >= 0 
-        ? "text-violet-600 dark:text-violet-400"
-        : "text-red-600 dark:text-red-400",
-      valueColor: remaining >= 0 
-        ? "text-emerald-600 dark:text-emerald-400"
-        : "text-red-600 dark:text-red-400",
+      iconColor:
+        remaining >= 0
+          ? "text-violet-600 dark:text-violet-400"
+          : "text-red-600 dark:text-red-400",
+      valueColor:
+        remaining >= 0
+          ? "text-emerald-600 dark:text-emerald-400"
+          : "text-red-600 dark:text-red-400",
       showTooltip: true,
     },
   ];
@@ -75,7 +77,10 @@ export function HeadlineCards({
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.title} className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+        <Card
+          key={card.title}
+          className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5"
+        >
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div>
@@ -84,7 +89,9 @@ export function HeadlineCards({
                   {formatCurrency(card.value)}
                 </p>
               </div>
-              <div className={`flex h-9 w-9 items-center justify-center rounded-full ${card.iconBg}`}>
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-full ${card.iconBg}`}
+              >
                 <card.icon className={`h-4 w-4 ${card.iconColor}`} />
               </div>
             </div>
@@ -106,7 +113,9 @@ export function HeadlineCards({
                     </p>
                   </TooltipContent>
                 </Tooltip>
-                <span className="text-xs text-muted-foreground">After savings</span>
+                <span className="text-xs text-muted-foreground">
+                  After savings
+                </span>
               </div>
             )}
           </CardContent>

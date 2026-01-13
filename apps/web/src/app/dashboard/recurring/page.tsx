@@ -14,7 +14,7 @@ import {
 } from "@/lib/api/recurring";
 import { getSummary } from "@/lib/api/summary";
 import { toast } from "sonner";
-import { Plus, Receipt, CreditCard } from "lucide-react";
+import { Plus, Receipt, CreditCard, Repeat } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 
 type ViewType = "BILL" | "SUBSCRIPTION";
@@ -100,10 +100,10 @@ export default function RecurringPage() {
 
   if (isLoading) {
     return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -115,44 +115,68 @@ export default function RecurringPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Recurring</h1>
-          <p className="text-muted-foreground text-sm">
-            Monthly commitments & subscriptions
-          </p>
+    <div className="container mx-auto space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20 dark:bg-blue-500/10">
+            <Repeat className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Recurring</h1>
+            <p className="text-sm text-muted-foreground">
+              Monthly commitments & subscriptions
+            </p>
+          </div>
         </div>
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add recurring
+        <Button onClick={handleAdd} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Recurring
         </Button>
       </div>
 
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Total Monthly</p>
-          <p className="text-2xl font-bold">{formatCurrency(totalMonthly)}</p>
-          <p className="text-muted-foreground text-xs">
-            {billsCount + subscriptionsCount} active commitment
-            {billsCount + subscriptionsCount !== 1 ? "s" : ""}
+      {/* Summary Cards */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Total Monthly</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totalMonthly)}</p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500/10">
+              <Repeat className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {billsCount + subscriptionsCount} active commitment{billsCount + subscriptionsCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Bills</p>
-          <p className="text-2xl font-bold">{formatCurrency(totalBills)}</p>
-          <p className="text-muted-foreground text-xs">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Bills</p>
+              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatCurrency(totalBills)}</p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10">
+              <Receipt className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
             {billsCount} active bill{billsCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Subscriptions</p>
-          <p className="text-2xl font-bold">
-            {formatCurrency(totalSubscriptions)}
-          </p>
-          <p className="text-muted-foreground text-xs">
-            {subscriptionsCount} active subscription
-            {subscriptionsCount !== 1 ? "s" : ""}
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Subscriptions</p>
+              <p className="text-2xl font-bold text-violet-600 dark:text-violet-400">{formatCurrency(totalSubscriptions)}</p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-500/10">
+              <CreditCard className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {subscriptionsCount} active subscription{subscriptionsCount !== 1 ? "s" : ""}
           </p>
         </div>
       </div>

@@ -46,7 +46,7 @@ function StatCard({
   const trendIsBad = invertTrend ? isPositive : isNegative;
 
   return (
-    <Card>
+    <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div>

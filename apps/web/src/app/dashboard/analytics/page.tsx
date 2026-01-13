@@ -13,6 +13,7 @@ import { ExpenseBreakdownPie } from "@/components/analytics/expense-breakdown-pi
 import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
 import { CurrentMonthStats } from "@/components/analytics/current-month-stats";
 import { MonthComparisonRadar } from "@/components/analytics/month-comparison-radar";
+import { BarChart3, AlertCircle } from "lucide-react";
 
 type TimeRange = 3 | 6 | 12;
 
@@ -33,10 +34,10 @@ export default function AnalyticsPage() {
 
   if (isLoading) {
     return (
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -49,7 +50,10 @@ export default function AnalyticsPage() {
 
   if (!analyticsData || !summary) {
     return (
-      <div className="flex h-full items-center justify-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 dark:bg-red-500/10">
+          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+        </div>
         <p className="text-muted-foreground">Failed to load analytics data</p>
       </div>
     );
@@ -64,13 +68,18 @@ export default function AnalyticsPage() {
       : null;
 
   return (
-    <div className="container mx-auto space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Analytics</h1>
-          <p className="text-muted-foreground text-sm">
-            Trends and spending patterns
-          </p>
+    <div className="container mx-auto space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-violet-500/20 dark:bg-violet-500/10">
+            <BarChart3 className="h-5 w-5 text-violet-600 dark:text-violet-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Analytics</h1>
+            <p className="text-sm text-muted-foreground">
+              Trends and spending patterns
+            </p>
+          </div>
         </div>
         <AnalyticsControls
           selectedRange={timeRange}

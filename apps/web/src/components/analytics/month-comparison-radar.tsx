@@ -83,8 +83,8 @@ export function MonthComparisonRadar({
   ];
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+      <CardHeader className="pt-2 [.border-b]:pb-2 flex flex-col justify-center border-b border-border/50 bg-white/50 dark:bg-black/20">
         <div className="flex items-center gap-2">
           <Activity className="text-muted-foreground h-5 w-5" />
           <CardTitle>Month Comparison</CardTitle>

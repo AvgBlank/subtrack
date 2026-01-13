@@ -10,7 +10,7 @@ import {
 import { AddEditOneTimeModal } from "@/components/one-time/add-edit-one-time-modal";
 import { getOneTimeTransactions } from "@/lib/api/one-time";
 import { getSummary } from "@/lib/api/summary";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, CreditCard, Calculator, Tag } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 
 const getMonthName = (month: number): string => {
@@ -89,10 +89,10 @@ export default function OneTimePage() {
 
   if (isLoading) {
     return (
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -104,71 +104,93 @@ export default function OneTimePage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">One-time</h1>
-          <p className="text-muted-foreground text-sm">
-            Non-recurring expenses
-          </p>
+    <div className="container mx-auto space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20 dark:bg-orange-500/10">
+            <CreditCard className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">One-time</h1>
+            <p className="text-sm text-muted-foreground">
+              Non-recurring expenses
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={handlePreviousMonth}>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-1 backdrop-blur-sm">
+            <Button variant="ghost" size="icon" onClick={handlePreviousMonth} className="h-8 w-8">
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Previous month</span>
             </Button>
             <div className="min-w-32 text-center">
-              <span className="font-medium">
+              <span className="text-sm font-medium">
                 {getMonthName(selectedMonth)} {selectedYear}
               </span>
             </div>
             <Button
-              variant="outline"
+              variant="ghost"
               size="icon"
               onClick={handleNextMonth}
               disabled={isCurrentMonth}
+              className="h-8 w-8"
             >
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Next month</span>
             </Button>
           </div>
 
-          <Button onClick={handleAdd}>
-            <Plus className="mr-2 h-4 w-4" />
-            Add expense
+          <Button onClick={handleAdd} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Add Expense
           </Button>
         </div>
       </div>
 
-      {/* Summary Tiles */}
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Total This Month</p>
-          <p className="text-2xl font-bold">{formatCurrency(monthlyTotal)}</p>
-          <p className="text-muted-foreground text-xs">
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Total This Month</p>
+              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">{formatCurrency(monthlyTotal)}</p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-500/10">
+              <CreditCard className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
             {transactionCount} expense{transactionCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Average Per Expense</p>
-          <p className="text-2xl font-bold">
-            {formatCurrency(
-              transactionCount > 0 ? monthlyTotal / transactionCount : 0,
-            )}
-          </p>
-          <p className="text-muted-foreground text-xs">This month</p>
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Average Per Expense</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {formatCurrency(transactionCount > 0 ? monthlyTotal / transactionCount : 0)}
+              </p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500/10">
+              <Calculator className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">This month</p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Top Category</p>
-          <p className="text-2xl font-bold">
-            {topCategory ? topCategory[0] : "—"}
-          </p>
-          <p className="text-muted-foreground text-xs">
-            {topCategory
-              ? formatCurrency(Number(topCategory[1].totalAmount))
-              : "No expenses"}
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Top Category</p>
+              <p className="text-2xl font-bold text-violet-600 dark:text-violet-400">
+                {topCategory ? topCategory[0] : "—"}
+              </p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-500/10">
+              <Tag className="h-4 w-4 text-violet-600 dark:text-violet-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {topCategory ? formatCurrency(Number(topCategory[1].totalAmount)) : "No expenses"}
           </p>
         </div>
       </div>

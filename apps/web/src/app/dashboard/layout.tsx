@@ -70,13 +70,19 @@ export default function DashLayout({
             email={user.email}
             avatar={user.picture}
           />
-          <SidebarInset className="px-4">
-            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+          <SidebarInset className="relative px-4">
+            <div className="pointer-events-none absolute inset-0 overflow-hidden">
+              <div className="absolute -left-1/4 -top-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 blur-3xl dark:from-emerald-500/5 dark:to-cyan-500/5" />
+              <div className="absolute -bottom-1/4 -right-1/4 h-1/2 w-1/2 rounded-full bg-gradient-to-tl from-violet-500/10 to-fuchsia-500/10 blur-3xl dark:from-violet-500/5 dark:to-fuchsia-500/5" />
+            </div>
+            <header className="relative z-10 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
               <div className="flex items-center gap-2">
                 <SidebarTrigger className="-ml-1" />
               </div>
             </header>
-            {children}
+            <main className="relative z-10">
+              {children}
+            </main>
           </SidebarInset>
         </SidebarProvider>
       </QueryClientProvider>

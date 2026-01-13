@@ -77,8 +77,8 @@ export function RecurringSnapshot({
   subscriptions,
 }: RecurringSnapshotProps) {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+      <CardHeader className="pt-2 flex h-full items-center justify-between [.border-b]:pb-2 border-b border-border/50 bg-white/50 dark:bg-black/20">
         <CardTitle>Recurring Expenses</CardTitle>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/dashboard/recurring">View all</Link>

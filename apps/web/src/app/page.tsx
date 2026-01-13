@@ -100,7 +100,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
@@ -129,7 +128,6 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="container mx-auto px-4 py-24 text-center">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm">
@@ -172,67 +170,79 @@ export default function LandingPage() {
           <div className="relative rounded-2xl border bg-card p-4 shadow-2xl">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {[
-                { label: "Income", value: "₹85,000", icon: IndianRupee, color: "text-foreground" },
-                { label: "Recurring", value: "₹32,450", icon: Repeat, color: "text-foreground" },
-                { label: "One-time", value: "₹8,200", icon: CreditCard, color: "text-foreground" },
-                { label: "Remaining", value: "₹29,350", icon: Wallet, color: "text-green-500" },
+                { label: "Income", value: "₹85,000", icon: IndianRupee, color: "text-emerald-600 dark:text-emerald-400", iconBg: "bg-emerald-500/10" },
+                { label: "Recurring", value: "₹32,450", icon: Repeat, color: "text-blue-600 dark:text-blue-400", iconBg: "bg-blue-500/10" },
+                { label: "One-time", value: "₹8,200", icon: CreditCard, color: "text-orange-600 dark:text-orange-400", iconBg: "bg-orange-500/10" },
+                { label: "Remaining", value: "₹29,350", icon: Wallet, color: "text-emerald-600 dark:text-emerald-400", iconBg: "bg-violet-500/10", iconColor: "text-violet-600 dark:text-violet-400" },
               ].map((card) => (
                 <div
                   key={card.label}
-                  className="rounded-xl border bg-background p-4 shadow-sm"
+                  className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5"
                 >
-                  <div className="flex items-center justify-between pb-2">
-                    <span className="text-sm text-muted-foreground">{card.label}</span>
-                    <card.icon className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className="text-sm text-muted-foreground">{card.label}</span>
+                      <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
+                    </div>
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-full ${card.iconBg}`}>
+                      <card.icon className={`h-4 w-4 ${card.iconColor || card.color}`} />
+                    </div>
                   </div>
-                  <p className={`text-2xl font-bold ${card.color}`}>{card.value}</p>
                 </div>
               ))}
             </div>
             <div className="mt-4 grid gap-4 md:grid-cols-3">
-              <div className="rounded-xl border bg-background p-4 shadow-sm md:col-span-2">
-                <div className="mb-4 flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-muted-foreground" />
-                  <span className="font-semibold">Cash Flow Trend</span>
+              <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm md:col-span-2 dark:from-slate-500/5 dark:to-slate-600/5">
+                <div className="border-b border-border/50 bg-white/50 p-4 dark:bg-black/20">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-muted-foreground" />
+                    <span className="font-semibold">Cash Flow Trend</span>
+                  </div>
                 </div>
-                <div className="flex h-32 items-end justify-around gap-2">
-                  {[40, 65, 45, 80, 55, 70, 90].map((height, i) => (
-                    <div key={i} className="flex flex-1 flex-col items-center gap-1">
-                      <div
-                        className="w-full rounded-t bg-linear-to-t from-chart-1 to-chart-2"
-                        style={{ height: `${height}%` }}
-                      />
-                      <span className="text-xs text-muted-foreground">
-                        {["Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan"][i]}
-                      </span>
-                    </div>
-                  ))}
+                <div className="p-4">
+                  <div className="flex h-32 items-end justify-around gap-2">
+                    {[40, 65, 45, 80, 55, 70, 90].map((height, i) => (
+                      <div key={i} className="flex flex-1 flex-col items-center gap-1">
+                        <div
+                          className="w-full rounded-t bg-linear-to-t from-chart-1 to-chart-2"
+                          style={{ height: `${height}%` }}
+                        />
+                        <span className="text-xs text-muted-foreground">
+                          {["Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan"][i]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-              <div className="rounded-xl border bg-background p-4 shadow-sm">
-                <div className="mb-4 flex items-center gap-2">
-                  <Target className="h-5 w-5 text-muted-foreground" />
-                  <span className="font-semibold">Savings Goals</span>
+              <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+                <div className="border-b border-border/50 bg-white/50 p-4 dark:bg-black/20">
+                  <div className="flex items-center gap-2">
+                    <Target className="h-5 w-5 text-muted-foreground" />
+                    <span className="font-semibold">Savings Goals</span>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  {[
-                    { name: "Emergency Fund", progress: 65 },
-                    { name: "Vacation", progress: 42 },
-                    { name: "New Laptop", progress: 88 },
-                  ].map((goal) => (
-                    <div key={goal.name}>
-                      <div className="mb-1 flex justify-between text-sm">
-                        <span>{goal.name}</span>
-                        <span className="text-muted-foreground">{goal.progress}%</span>
+                <div className="p-4">
+                  <div className="space-y-3">
+                    {[
+                      { name: "Emergency Fund", progress: 65 },
+                      { name: "Vacation", progress: 42 },
+                      { name: "New Laptop", progress: 88 },
+                    ].map((goal) => (
+                      <div key={goal.name}>
+                        <div className="mb-1 flex justify-between text-sm">
+                          <span>{goal.name}</span>
+                          <span className="text-muted-foreground">{goal.progress}%</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-muted">
+                          <div
+                            className="h-2 rounded-full bg-linear-to-r from-chart-1 to-chart-2"
+                            style={{ width: `${goal.progress}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="h-2 rounded-full bg-muted">
-                        <div
-                          className="h-2 rounded-full bg-linear-to-r from-chart-1 to-chart-2"
-                          style={{ width: `${goal.progress}%` }}
-                        />
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -326,42 +336,54 @@ export default function LandingPage() {
             <div className="relative">
               <div className="absolute -inset-4 rounded-3xl bg-linear-to-r from-chart-3/20 to-chart-4/20 blur-2xl" />
               <div className="relative grid grid-cols-2 gap-4">
-                <div className="rounded-xl border bg-card p-4 shadow-lg">
-                  <p className="mb-2 text-sm text-muted-foreground">Expense Breakdown</p>
-                  <div className="relative mx-auto h-24 w-24">
-                    <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-1" strokeDasharray="125.6 251.2" />
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-2" strokeDasharray="75.4 251.2" strokeDashoffset="-125.6" />
-                      <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-3" strokeDasharray="50.2 251.2" strokeDashoffset="-201" />
-                    </svg>
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+                  <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
+                    <p className="text-sm text-muted-foreground">Expense Breakdown</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="relative mx-auto h-24 w-24">
+                      <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-1" strokeDasharray="125.6 251.2" />
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-2" strokeDasharray="75.4 251.2" strokeDashoffset="-125.6" />
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="20" className="text-chart-3" strokeDasharray="50.2 251.2" strokeDashoffset="-201" />
+                      </svg>
+                    </div>
                   </div>
                 </div>
-                <div className="rounded-xl border bg-card p-4 shadow-lg">
-                  <p className="mb-2 text-sm text-muted-foreground">Monthly Trend</p>
-                  <div className="flex h-24 items-end justify-around gap-1">
-                    {[30, 45, 60, 40, 75, 55].map((h, i) => (
-                      <div key={i} className="w-3 rounded-t bg-chart-2" style={{ height: `${h}%` }} />
-                    ))}
+                <div className="overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+                  <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
+                    <p className="text-sm text-muted-foreground">Monthly Trend</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="flex h-24 items-end justify-around gap-1">
+                      {[30, 45, 60, 40, 75, 55].map((h, i) => (
+                        <div key={i} className="w-3 rounded-t bg-chart-2" style={{ height: `${h}%` }} />
+                      ))}
+                    </div>
                   </div>
                 </div>
-                <div className="col-span-2 rounded-xl border bg-card p-4 shadow-lg">
-                  <p className="mb-2 text-sm text-muted-foreground">Category Comparison</p>
-                  <div className="space-y-2">
-                    {[
-                      { name: "Utilities", width: "75%" },
-                      { name: "Entertainment", width: "45%" },
-                      { name: "Food", width: "60%" },
-                    ].map((cat) => (
-                      <div key={cat.name} className="flex items-center gap-2">
-                        <span className="w-20 text-xs">{cat.name}</span>
-                        <div className="h-2 flex-1 rounded-full bg-muted">
-                          <div
-                            className="h-2 rounded-full bg-linear-to-r from-chart-4 to-chart-5"
-                            style={{ width: cat.width }}
-                          />
+                <div className="col-span-2 overflow-hidden rounded-xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+                  <div className="border-b border-border/50 bg-white/50 p-3 dark:bg-black/20">
+                    <p className="text-sm text-muted-foreground">Category Comparison</p>
+                  </div>
+                  <div className="p-4">
+                    <div className="space-y-2">
+                      {[
+                        { name: "Utilities", width: "75%" },
+                        { name: "Entertainment", width: "45%" },
+                        { name: "Food", width: "60%" },
+                      ].map((cat) => (
+                        <div key={cat.name} className="flex items-center gap-2">
+                          <span className="w-20 text-xs">{cat.name}</span>
+                          <div className="h-2 flex-1 rounded-full bg-muted">
+                            <div
+                              className="h-2 rounded-full bg-linear-to-r from-chart-4 to-chart-5"
+                              style={{ width: cat.width }}
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -377,12 +399,14 @@ export default function LandingPage() {
             <div className="order-2 lg:order-1">
               <div className="relative">
                 <div className="absolute -inset-4 rounded-3xl bg-linear-to-r from-chart-1/10 to-chart-5/10 blur-2xl" />
-                <div className="relative rounded-2xl border bg-card p-6 shadow-lg">
-                  <div className="mb-4 flex items-center gap-3">
-                    <Download className="h-5 w-5 text-muted-foreground" />
-                    <span className="font-semibold">Export Options</span>
+                <div className="relative overflow-hidden rounded-2xl border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-lg backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+                  <div className="border-b border-border/50 bg-white/50 p-4 dark:bg-black/20">
+                    <div className="flex items-center gap-3">
+                      <Download className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                      <span className="font-semibold">Export Options</span>
+                    </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-3 p-4">
                     {[
                       { name: "Monthly Summary", desc: "Income & expenses per month" },
                       { name: "Recurring Details", desc: "Bills & subscriptions" },
@@ -391,7 +415,7 @@ export default function LandingPage() {
                     ].map((opt) => (
                       <div
                         key={opt.name}
-                        className="flex items-center justify-between rounded-lg border bg-background p-3"
+                        className="flex items-center justify-between rounded-lg border border-border/50 bg-background/50 p-3"
                       >
                         <div>
                           <p className="text-sm font-medium">{opt.name}</p>
@@ -399,7 +423,7 @@ export default function LandingPage() {
                         </div>
                         <div className="flex gap-2">
                           <span className="rounded bg-muted px-2 py-1 text-xs">CSV</span>
-                          <span className="rounded bg-primary/10 px-2 py-1 text-xs text-primary">
+                          <span className="rounded bg-cyan-500/10 px-2 py-1 text-xs text-cyan-600 dark:text-cyan-400">
                             XLSX
                           </span>
                         </div>

@@ -6,6 +6,7 @@ import { HeadlineCards } from "@/components/dashboard/headline-cards";
 import { RecurringSnapshot } from "@/components/dashboard/recurring-snapshot";
 import { SavingsSnapshot } from "@/components/dashboard/savings-snapshot";
 import { CanISpend } from "@/components/dashboard/can-i-spend";
+import { LayoutDashboard, AlertCircle } from "lucide-react";
 
 const Dashboard = () => {
   const { data: summary, isLoading } = useQuery({
@@ -15,10 +16,10 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -31,8 +32,11 @@ const Dashboard = () => {
 
   if (!summary) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <p>Failed to load summary</p>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-500/20 dark:bg-red-500/10">
+          <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+        </div>
+        <p className="text-muted-foreground">Failed to load summary</p>
       </div>
     );
   }
@@ -74,6 +78,18 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto space-y-6 pb-4">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 dark:bg-primary/10">
+          <LayoutDashboard className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <p className="text-sm text-muted-foreground">
+            Your financial overview
+          </p>
+        </div>
+      </div>
+
       <HeadlineCards
         income={income}
         recurring={recurring}

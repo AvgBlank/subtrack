@@ -8,7 +8,7 @@ import { AddEditIncomeModal } from "@/components/income/add-edit-income-modal";
 import { getIncomes, toggleIncomeStatus } from "@/lib/api/income";
 import { getSummary } from "@/lib/api/summary";
 import { toast } from "sonner";
-import { Plus } from "lucide-react";
+import { Plus, IndianRupee, Users, TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 
 export default function IncomePage() {
@@ -34,6 +34,7 @@ export default function IncomePage() {
   const incomeCount = summary?.income.incomeCount ?? 0;
   const activeIncomes = incomes.filter((i) => i.isActive);
   const inactiveCount = incomes.length - activeIncomes.length;
+  const netCashFlow = Number(summary?.cashFlow.netCashFlow ?? 0);
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, isActive }: { id: string; isActive: boolean }) =>
@@ -75,10 +76,10 @@ export default function IncomePage() {
 
   if (isLoading) {
     return (
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -90,50 +91,75 @@ export default function IncomePage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Income</h1>
-          <p className="text-muted-foreground text-sm">
-            Money credited to your account
-          </p>
+    <div className="container mx-auto space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/20 dark:bg-emerald-500/10">
+            <IndianRupee className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Income</h1>
+            <p className="text-sm text-muted-foreground">
+              Money credited to your account
+            </p>
+          </div>
         </div>
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add income
+        <Button onClick={handleAdd} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Income
         </Button>
       </div>
 
-      {/* Summary Tiles */}
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Total Monthly Income</p>
-          <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-            {formatCurrency(totalIncome)}
-          </p>
-          <p className="text-muted-foreground text-xs">
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Total Monthly Income</p>
+              <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                {formatCurrency(totalIncome)}
+              </p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10">
+              <IndianRupee className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
             {incomeCount} active source{incomeCount !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Income Sources</p>
-          <p className="text-2xl font-bold">{incomes.length}</p>
-          <p className="text-muted-foreground text-xs">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Income Sources</p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{incomes.length}</p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500/10">
+              <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
             {activeIncomes.length} active, {inactiveCount} inactive
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">Net Cash Flow</p>
-          <p
-            className={`text-2xl font-bold ${
-              Number(summary?.cashFlow.netCashFlow ?? 0) >= 0
-                ? "text-green-600 dark:text-green-400"
-                : "text-red-600 dark:text-red-400"
-            }`}
-          >
-            {formatCurrency(Number(summary?.cashFlow.netCashFlow ?? 0))}
-          </p>
-          <p className="text-muted-foreground text-xs">After all expenses</p>
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">Net Cash Flow</p>
+              <p
+                className={`text-2xl font-bold ${
+                  netCashFlow >= 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {formatCurrency(netCashFlow)}
+              </p>
+            </div>
+            <div className={`flex h-9 w-9 items-center justify-center rounded-full ${netCashFlow >= 0 ? "bg-emerald-500/10" : "bg-red-500/10"}`}>
+              <TrendingUp className={`h-4 w-4 ${netCashFlow >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`} />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">After all expenses</p>
         </div>
       </div>
 

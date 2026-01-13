@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, FileSpreadsheet } from "lucide-react";
+import { Download, FileSpreadsheet, Calendar, FileType, CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -148,31 +148,37 @@ export default function ExportsPage() {
   };
 
   return (
-    <div className="container mx-auto max-w-2xl space-y-6 p-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Exports</h1>
-        <p className="text-muted-foreground text-sm">
-          Download your financial data
-        </p>
+    <div className="container mx-auto max-w-2xl space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/20 dark:bg-cyan-500/10">
+          <Download className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Exports</h1>
+          <p className="text-sm text-muted-foreground">
+            Download your financial data
+          </p>
+        </div>
       </div>
 
-      {/* Export Configuration Card */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileSpreadsheet className="h-5 w-5" />
+      <Card className="overflow-hidden border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+        <CardHeader className="border-b border-border/50 bg-white/50 dark:bg-black/20">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <FileSpreadsheet className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
             Export Configuration
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-6 p-6">
           {/* Date Range */}
           <div className="space-y-4">
-            <Label className="text-base font-medium">Date Range</Label>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Label className="text-base font-medium">Date Range</Label>
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {/* Start Date */}
               <div className="space-y-2">
-                <Label className="text-muted-foreground text-sm">
+                <Label className="text-sm text-muted-foreground">
                   Start Month
                 </Label>
                 <div className="flex gap-2">
@@ -180,7 +186,7 @@ export default function ExportsPage() {
                     value={startMonth.toString()}
                     onValueChange={(v) => setStartMonth(Number(v))}
                   >
-                    <SelectTrigger className="flex-1">
+                    <SelectTrigger className="flex-1 bg-background/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -195,7 +201,7 @@ export default function ExportsPage() {
                     value={startYear.toString()}
                     onValueChange={(v) => setStartYear(Number(v))}
                   >
-                    <SelectTrigger className="w-24">
+                    <SelectTrigger className="w-24 bg-background/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -209,15 +215,14 @@ export default function ExportsPage() {
                 </div>
               </div>
 
-              {/* End Date */}
               <div className="space-y-2">
-                <Label className="text-muted-foreground text-sm">End Month</Label>
+                <Label className="text-sm text-muted-foreground">End Month</Label>
                 <div className="flex gap-2">
                   <Select
                     value={endMonth.toString()}
                     onValueChange={(v) => setEndMonth(Number(v))}
                   >
-                    <SelectTrigger className="flex-1">
+                    <SelectTrigger className="flex-1 bg-background/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -232,7 +237,7 @@ export default function ExportsPage() {
                     value={endYear.toString()}
                     onValueChange={(v) => setEndYear(Number(v))}
                   >
-                    <SelectTrigger className="w-24">
+                    <SelectTrigger className="w-24 bg-background/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -248,9 +253,11 @@ export default function ExportsPage() {
             </div>
           </div>
 
-          {/* Export Type */}
           <div className="space-y-3">
-            <Label className="text-base font-medium">Export Type</Label>
+            <div className="flex items-center gap-2">
+              <FileType className="h-4 w-4 text-muted-foreground" />
+              <Label className="text-base font-medium">Export Type</Label>
+            </div>
             <RadioGroup
               value={exportType}
               onValueChange={(v: string) => setExportType(v as ExportType)}
@@ -259,7 +266,11 @@ export default function ExportsPage() {
               {EXPORT_TYPES.map((type) => (
                 <div
                   key={type.value}
-                  className="flex items-start space-x-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
+                  className={`flex items-start space-x-3 rounded-lg border bg-background/50 p-3 transition-all hover:bg-muted/50 ${
+                    exportType === type.value
+                      ? "border-cyan-500/50 ring-1 ring-cyan-500/20"
+                      : "border-border/50"
+                  }`}
                 >
                   <RadioGroupItem
                     value={type.value}
@@ -273,16 +284,18 @@ export default function ExportsPage() {
                     >
                       {type.label}
                     </Label>
-                    <p className="text-muted-foreground text-sm">
+                    <p className="text-sm text-muted-foreground">
                       {type.description}
                     </p>
                   </div>
+                  {exportType === type.value && (
+                    <CheckCircle2 className="h-5 w-5 text-cyan-600 dark:text-cyan-400" />
+                  )}
                 </div>
               ))}
             </RadioGroup>
           </div>
 
-          {/* Export Format */}
           <div className="space-y-3">
             <Label className="text-base font-medium">Format</Label>
             <RadioGroup
@@ -290,13 +303,25 @@ export default function ExportsPage() {
               onValueChange={(v: string) => setFormat(v as ExportFormat)}
               className="flex gap-4"
             >
-              <div className="flex items-center space-x-2">
+              <div
+                className={`flex items-center space-x-2 rounded-lg border bg-background/50 px-4 py-2 transition-all ${
+                  format === "csv"
+                    ? "border-cyan-500/50 ring-1 ring-cyan-500/20"
+                    : "border-border/50"
+                }`}
+              >
                 <RadioGroupItem value="csv" id="csv" />
                 <Label htmlFor="csv" className="cursor-pointer">
                   CSV
                 </Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div
+                className={`flex items-center space-x-2 rounded-lg border bg-background/50 px-4 py-2 transition-all ${
+                  format === "xlsx"
+                    ? "border-cyan-500/50 ring-1 ring-cyan-500/20"
+                    : "border-border/50"
+                }`}
+              >
                 <RadioGroupItem value="xlsx" id="xlsx" />
                 <Label htmlFor="xlsx" className="cursor-pointer">
                   Excel (XLSX)
@@ -305,17 +330,16 @@ export default function ExportsPage() {
             </RadioGroup>
           </div>
 
-          {/* Export Button */}
           <Button
             onClick={handleExport}
             disabled={isExporting}
-            className="w-full"
+            className="w-full gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700"
             size="lg"
           >
             {isExporting ? (
               <>
                 <svg
-                  className="mr-2 h-4 w-4 animate-spin"
+                  className="h-4 w-4 animate-spin"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -338,7 +362,7 @@ export default function ExportsPage() {
               </>
             ) : (
               <>
-                <Download className="mr-2 h-4 w-4" />
+                <Download className="h-4 w-4" />
                 Export Data
               </>
             )}

@@ -16,7 +16,7 @@ import { AddEditSavingsGoalModal } from "@/components/savings/add-edit-savings-g
 import { getSavingsGoals, deleteSavingsGoal } from "@/lib/api/savings";
 import { getSummary } from "@/lib/api/summary";
 import type { SavingsGoal } from "@/lib/api/savings";
-import { Plus, Target, Loader2 } from "lucide-react";
+import { Plus, Target, Loader2, PiggyBank, Wallet, TrendingUp } from "lucide-react";
 import { formatCurrency } from "@/lib/formatCurrency";
 import { toast } from "sonner";
 
@@ -77,10 +77,10 @@ export default function SavingsPage() {
 
   if (isLoading) {
     return (
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex min-h-[60vh] items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="animate-spin fill-black dark:fill-white"
+          className="animate-spin fill-foreground"
           width="32"
           height="32"
           viewBox="0 0 256 256"
@@ -102,65 +102,98 @@ export default function SavingsPage() {
   const isRemainingNegative = remainingAfterSavings < 0;
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Savings</h1>
-          <p className="text-muted-foreground text-sm">Your financial goals</p>
+    <div className="container mx-auto space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-500/20 dark:bg-teal-500/10">
+            <Target className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">Savings</h1>
+            <p className="text-sm text-muted-foreground">Your financial goals</p>
+          </div>
         </div>
-        <Button onClick={handleAdd}>
-          <Plus className="mr-2 h-4 w-4" />
-          Add goal
+        <Button onClick={handleAdd} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Add Goal
         </Button>
       </div>
 
-      {/* Summary Strip */}
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">
-            Total required savings / month
-          </p>
-          <p className="text-2xl font-bold">
-            {formatCurrency(totalRequiredSavings)}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Required Savings / Month
+              </p>
+              <p className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+                {formatCurrency(totalRequiredSavings)}
+              </p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-teal-500/10">
+              <PiggyBank className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {goals.length} active goal{goals.length !== 1 ? "s" : ""}
           </p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">
-            Available cash / month
-          </p>
-          <p className="text-2xl font-bold">
-            {formatCurrency(totalAvailableCash)}
-          </p>
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Available Cash / Month
+              </p>
+              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {formatCurrency(totalAvailableCash)}
+              </p>
+            </div>
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-500/10">
+              <Wallet className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">After expenses</p>
         </div>
-        <div className="rounded-lg border bg-card p-4">
-          <p className="text-muted-foreground text-sm">
-            Remaining after savings
-          </p>
-          <p
-            className={`text-2xl font-bold ${
-              isRemainingNegative
-                ? "text-red-600 dark:text-red-400"
-                : "text-green-600 dark:text-green-400"
-            }`}
-          >
-            {formatCurrency(remainingAfterSavings)}
+        <div className="overflow-hidden rounded-lg border border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 p-4 shadow-sm backdrop-blur-sm dark:from-slate-500/5 dark:to-slate-600/5">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm text-muted-foreground">
+                Remaining After Savings
+              </p>
+              <p
+                className={`text-2xl font-bold ${
+                  isRemainingNegative
+                    ? "text-red-600 dark:text-red-400"
+                    : "text-emerald-600 dark:text-emerald-400"
+                }`}
+              >
+                {formatCurrency(remainingAfterSavings)}
+              </p>
+            </div>
+            <div className={`flex h-9 w-9 items-center justify-center rounded-full ${isRemainingNegative ? "bg-red-500/10" : "bg-emerald-500/10"}`}>
+              <TrendingUp className={`h-4 w-4 ${isRemainingNegative ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`} />
+            </div>
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {isRemainingNegative ? "You need more income" : "Available to spend"}
           </p>
         </div>
       </div>
 
       {goals.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-16">
-          <Target className="text-muted-foreground mb-4 h-12 w-12" />
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed bg-muted/30 py-16 backdrop-blur-sm">
+          <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/20 dark:bg-teal-500/10">
+            <Target className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+          </div>
           <h3 className="mb-2 text-lg font-semibold">
             You haven&apos;t set any savings goals yet.
           </h3>
-          <p className="text-muted-foreground mb-6 max-w-md text-center text-sm">
+          <p className="mb-6 max-w-md text-center text-sm text-muted-foreground">
             Savings goals help you decide what you can safely spend. Set a goal
             to start tracking your progress toward financial milestones.
           </p>
-          <Button onClick={handleAdd}>
-            <Plus className="mr-2 h-4 w-4" />
+          <Button onClick={handleAdd} className="gap-2">
+            <Plus className="h-4 w-4" />
             Create your first goal
           </Button>
         </div>

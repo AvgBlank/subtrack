@@ -118,7 +118,7 @@ export default function LandingPage() {
               Subtrack
             </span>
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Button
               variant="ghost"
               size="icon"
@@ -128,11 +128,11 @@ export default function LandingPage() {
               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               <span className="sr-only">Toggle theme</span>
             </Button>
-            <Link href="/auth/login">
+            <Link href="/auth/login" className="hidden sm:block">
               <Button variant="ghost">Login</Button>
             </Link>
             <Link href="/auth/register">
-              <Button>Get Started</Button>
+              <Button size="sm" className="sm:size-default">Get Started</Button>
             </Link>
           </div>
         </div>

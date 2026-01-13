@@ -58,11 +58,11 @@ export function NavUser({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground hover:bg-gradient-to-br hover:from-slate-500/10 hover:to-slate-600/10"
             >
-              <Avatar className="h-8 w-8 rounded-md">
+              <Avatar className="h-8 w-8 rounded-md bg-gradient-to-br from-violet-500/20 to-purple-500/20 dark:from-violet-500/30 dark:to-purple-500/30">
                 <AvatarImage src={user.avatar ?? ""} alt={user.name} />
-                <AvatarFallback className="rounded-md">
+                <AvatarFallback className="rounded-md bg-gradient-to-br from-violet-500/20 to-purple-500/20 text-violet-600 dark:from-violet-500/30 dark:to-purple-500/30 dark:text-violet-400">
                   {user.name?.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>

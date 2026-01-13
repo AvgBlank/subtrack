@@ -41,17 +41,19 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel className="text-sm">Platform</SidebarGroupLabel>
+      <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">Platform</SidebarGroupLabel>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton asChild tooltip={main.title}>
+          <SidebarMenuButton asChild tooltip={main.title} className="hover:bg-gradient-to-br hover:from-slate-500/10 hover:to-slate-600/10">
             <Link href={main.url}>
-              {main.icon && <main.icon />}
-              <span className="text-lg">{main.title}</span>
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br from-blue-500/15 to-indigo-500/15 dark:from-blue-500/25 dark:to-indigo-500/25">
+                {main.icon && <main.icon className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />}
+              </div>
+              <span className="text-base font-medium">{main.title}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <Collapsible
             key={item.title}
             asChild
@@ -60,19 +62,29 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span className="text-lg">{item.title}</span>
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                <SidebarMenuButton tooltip={item.title} className="hover:bg-gradient-to-br hover:from-slate-500/10 hover:to-slate-600/10">
+                  <div className={`flex h-6 w-6 items-center justify-center rounded-md bg-gradient-to-br ${
+                    index === 0 
+                      ? "from-orange-500/15 to-amber-500/15 dark:from-orange-500/25 dark:to-amber-500/25" 
+                      : "from-violet-500/15 to-purple-500/15 dark:from-violet-500/25 dark:to-purple-500/25"
+                  }`}>
+                    {item.icon && <item.icon className={`h-3.5 w-3.5 ${
+                      index === 0 
+                        ? "text-orange-600 dark:text-orange-400" 
+                        : "text-violet-600 dark:text-violet-400"
+                    }`} />}
+                  </div>
+                  <span className="text-base font-medium">{item.title}</span>
+                  <ChevronRight className="ml-auto h-4 w-4 text-muted-foreground/50 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
                   {item.items?.map((subItem) => (
                     <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
+                      <SidebarMenuSubButton asChild className="hover:bg-gradient-to-br hover:from-slate-500/10 hover:to-slate-600/10">
                         <Link href={subItem.url}>
-                          <span className="text-md">{subItem.title}</span>
+                          <span className="text-sm">{subItem.title}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

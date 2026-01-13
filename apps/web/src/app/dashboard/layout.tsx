@@ -80,7 +80,7 @@ export default function DashLayout({
                 <SidebarTrigger className="-ml-1" />
               </div>
             </header>
-            <main className="relative z-10">
+            <main className="relative z-10 pb-6">
               {children}
             </main>
           </SidebarInset>

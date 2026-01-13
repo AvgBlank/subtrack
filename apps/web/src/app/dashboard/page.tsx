@@ -77,7 +77,7 @@ const Dashboard = () => {
   }));
 
   return (
-    <div className="container mx-auto space-y-6 pb-4">
+    <div className="container mx-auto space-y-6">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20 dark:bg-primary/10">
           <LayoutDashboard className="h-5 w-5 text-primary" />

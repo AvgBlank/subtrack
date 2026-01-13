@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
   ChartColumn,
-  GalleryVerticalEnd,
   LayoutDashboard,
   SquareKanban,
 } from "lucide-react";
@@ -36,7 +35,6 @@ export function AppSidebar({
     },
     org: {
       name: "Subtrack",
-      logo: GalleryVerticalEnd,
     },
     navMain: {
       title: "Overview",
@@ -68,14 +66,14 @@ export function AppSidebar({
   };
 
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="borer-sidebar-border pb-3 border-b">
+    <Sidebar collapsible="icon" className="border-r border-border/50">
+      <SidebarHeader className="border-sidebar-border border-b border-border/50 bg-gradient-to-br from-slate-500/5 to-slate-600/5 pb-3 dark:from-slate-500/5 dark:to-slate-600/5">
         <NavOrg org={data.org} />
       </SidebarHeader>
-      <SidebarContent className="pt-3 borer-sidebar-border pb-3 border-b">
+      <SidebarContent className="border-sidebar-border border-b border-border/50 bg-gradient-to-b from-transparent to-slate-500/5 pt-3 pb-3 dark:to-slate-500/5">
         <NavMain main={data.navMain} items={data.navItems} />
       </SidebarContent>
-      <SidebarFooter className="pt-3">
+      <SidebarFooter className="bg-gradient-to-br from-slate-500/5 to-slate-600/5 pt-3 dark:from-slate-500/5 dark:to-slate-600/5">
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

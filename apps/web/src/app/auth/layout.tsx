@@ -5,7 +5,8 @@ import { useAuthStore } from "@/store/auth-store";
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Receipt, Moon, Sun } from "lucide-react";
+import Image from "next/image";
+import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 
@@ -66,10 +67,8 @@ export default function AuthLayout({
       <nav className="relative z-10 border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-              <Receipt className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">Subtrack</span>
+            <Image src="/favicon.svg" alt="Subtrack" width={32} height={32} className="h-8 w-8" />
+            <span className="text-xl font-semibold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent dark:from-emerald-400 dark:to-teal-400">Subtrack</span>
           </Link>
           <Button
             variant="ghost"

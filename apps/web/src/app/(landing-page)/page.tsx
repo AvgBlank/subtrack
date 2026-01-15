@@ -140,13 +140,6 @@ export default function LandingPage() {
 
       <section className="container mx-auto px-4 py-24 text-center">
         <div className="mx-auto max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full border bg-muted/50 px-4 py-1.5 text-sm">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-            </span>
-            Personal finance tracking made simple
-          </div>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
             Take control of your{" "}
             <span className="bg-linear-to-r from-chart-1 to-chart-2 bg-clip-text text-transparent">

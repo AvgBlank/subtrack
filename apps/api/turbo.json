@@ -3,13 +3,13 @@
   "extends": ["//"],
   "tasks": {
     "build": {
-      "dependsOn": ["@subtrack/shared#build"]
+      "dependsOn": ["@subtrack/shared#build", "@subtrack/api#db:generate"]
     },
     "dev": {
-      "dependsOn": ["@subtrack/shared#build"]
+      "dependsOn": ["@subtrack/shared#build", "@subtrack/api#db:generate"]
     },
     "check-types": {
-      "dependsOn": ["@subtrack/shared#build"]
+      "dependsOn": ["@subtrack/shared#build", "@subtrack/api#db:generate"]
     }
   }
 }

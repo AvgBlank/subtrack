@@ -58,7 +58,7 @@
       "cache": false
     },
     "db:generate": {
-      "cache": false
+      "cache": true
     },
     "db:migrate:dev": {
       "cache": false

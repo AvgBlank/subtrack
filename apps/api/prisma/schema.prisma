@@ -23,13 +23,34 @@ model User {
     oneTimeTransactions   OneTimeTransaction[]
     incomes               Income[]
     savingsGoals          SavingsGoal[]
+    sessions              Session[]
+}
+
+model Session {
+  id String @id @default(uuid())
+
+  userAgent String
+  browser   String
+  os        String
+  device    String
+
+  location  String
+  ipAddress String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActiveAt DateTime @default(now())
 }
 
 model RecurringTransactions {
     id String @id @default(uuid())
 
     userId String
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     name      String
     amount    Decimal
@@ -47,7 +68,7 @@ model OneTimeTransaction {
     id String @id @default(uuid())
 
     userId String
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     name     String
     amount   Decimal
@@ -62,7 +83,7 @@ model Income {
     id String @id @default(uuid())
 
     userId String
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     source   String
     amount   Decimal
@@ -77,12 +98,12 @@ model SavingsGoal {
     id String @id @default(uuid())
 
     userId String
-    user   User   @relation(fields: [userId], references: [id])
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    name                String
-    targetAmount        Decimal
-    currentAmount       Decimal  @default(0.0)
-    targetDate          DateTime
+    name          String
+    targetAmount  Decimal
+    currentAmount Decimal  @default(0.0)
+    targetDate    DateTime
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

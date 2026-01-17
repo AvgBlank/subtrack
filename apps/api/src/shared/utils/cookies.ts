@@ -4,13 +4,13 @@ import { thirtyDays, thirtyDaysFromNow } from "@/shared/constants/dates";
 
 const secure = NODE_ENV === "production";
 const sameSite = NODE_ENV === "production" ? "none" : "lax";
-const path = "/";
+const REFRESH_PATH = "/api/auth/refresh";
 
 const defaults: CookieOptions = {
   httpOnly: true,
   sameSite,
   secure,
-  path,
+  path: REFRESH_PATH,
 };
 
 export const setAuthCookie = (res: Response, refreshToken: string | null) => {

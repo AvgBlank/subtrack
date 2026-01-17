@@ -6,6 +6,7 @@ const authRouter = Router()
   .post("/register", authControllers.register)
   .post("/login", authControllers.login)
   .post("/google", authControllers.googleOAuth)
+  .get("/refresh", authControllers.refresh)
   .get("/verify", authenticate, authControllers.verify)
   .delete("/logout", authControllers.logout);
 

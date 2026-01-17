@@ -7,6 +7,12 @@ declare global {
         email: string;
         picture: string | null;
       };
+      session?: {
+        id: string;
+        userId: string;
+        userAgent: string;
+        expiresAt: Date;
+      };
     }
   }
 }

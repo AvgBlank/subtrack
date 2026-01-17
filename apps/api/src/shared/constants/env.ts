@@ -7,6 +7,7 @@ const envSchema = z.object({
   APP_ORIGIN: z.url().prefault("http://localhost:3000"),
   DATABASE_URL: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string(),
+  ACCESS_TOKEN_SECRET: z.string(),
 
   GOOGLE_CLIENT_ID: z.string().min(1),
   GOOGLE_CLIENT_SECRET: z.string().min(1),
@@ -29,6 +30,7 @@ export const {
   APP_ORIGIN,
   DATABASE_URL,
   REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET,
 
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,

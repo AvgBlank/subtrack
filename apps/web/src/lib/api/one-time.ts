@@ -1,4 +1,4 @@
-import apiFetch from "@/utils/apiFetch";
+import authFetch from "@/utils/apiFetch";
 
 export type OneTimeTransaction = {
   id: string;
@@ -23,7 +23,7 @@ export const getOneTimeTransactions = async (
   month: number,
   year: number,
 ): Promise<OneTimeTransaction[]> => {
-  const { response, data } = await apiFetch(
+  const { response, data } = await authFetch(
     `/api/one-time?month=${month}&year=${year}`,
   );
   if (!response.ok) {
@@ -35,7 +35,7 @@ export const getOneTimeTransactions = async (
 export const getOneTimeById = async (
   id: string,
 ): Promise<OneTimeTransaction> => {
-  const { response, data } = await apiFetch(`/api/one-time/${id}`);
+  const { response, data } = await authFetch(`/api/one-time/${id}`);
   if (!response.ok) {
     throw new Error(data?.error || "Failed to fetch one-time transaction");
   }
@@ -45,7 +45,7 @@ export const getOneTimeById = async (
 export const createOneTime = async (
   payload: CreateOneTimePayload,
 ): Promise<OneTimeTransaction> => {
-  const { response, data } = await apiFetch("/api/one-time", {
+  const { response, data } = await authFetch("/api/one-time", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -60,7 +60,7 @@ export const updateOneTime = async (
   id: string,
   payload: UpdateOneTimePayload,
 ): Promise<OneTimeTransaction> => {
-  const { response, data } = await apiFetch(`/api/one-time/${id}`, {
+  const { response, data } = await authFetch(`/api/one-time/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -72,7 +72,7 @@ export const updateOneTime = async (
 };
 
 export const deleteOneTime = async (id: string): Promise<void> => {
-  const { response, data } = await apiFetch(`/api/one-time/${id}`, {
+  const { response, data } = await authFetch(`/api/one-time/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {

@@ -1,4 +1,4 @@
-import apiFetch from "@/utils/apiFetch";
+import authFetch from "@/utils/apiFetch";
 
 export type SavingsGoal = {
   id: string;
@@ -24,7 +24,7 @@ type CreateSavingsGoalPayload = {
 type UpdateSavingsGoalPayload = Partial<CreateSavingsGoalPayload>;
 
 export const getSavingsGoals = async (): Promise<SavingsGoal[]> => {
-  const { response, data } = await apiFetch("/api/savings");
+  const { response, data } = await authFetch("/api/savings");
   if (!response.ok) {
     throw new Error(data?.error || "Failed to fetch savings goals");
   }
@@ -32,7 +32,7 @@ export const getSavingsGoals = async (): Promise<SavingsGoal[]> => {
 };
 
 export const getSavingsGoalById = async (id: string): Promise<SavingsGoal> => {
-  const { response, data } = await apiFetch(`/api/savings/${id}`);
+  const { response, data } = await authFetch(`/api/savings/${id}`);
   if (!response.ok) {
     throw new Error(data?.error || "Failed to fetch savings goal");
   }
@@ -42,7 +42,7 @@ export const getSavingsGoalById = async (id: string): Promise<SavingsGoal> => {
 export const createSavingsGoal = async (
   payload: CreateSavingsGoalPayload,
 ): Promise<SavingsGoal> => {
-  const { response, data } = await apiFetch("/api/savings", {
+  const { response, data } = await authFetch("/api/savings", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -57,7 +57,7 @@ export const updateSavingsGoal = async (
   id: string,
   payload: UpdateSavingsGoalPayload,
 ): Promise<SavingsGoal> => {
-  const { response, data } = await apiFetch(`/api/savings/${id}`, {
+  const { response, data } = await authFetch(`/api/savings/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -69,7 +69,7 @@ export const updateSavingsGoal = async (
 };
 
 export const deleteSavingsGoal = async (id: string): Promise<void> => {
-  const { response, data } = await apiFetch(`/api/savings/${id}`, {
+  const { response, data } = await authFetch(`/api/savings/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {

@@ -19,7 +19,7 @@ export default function OAuthSuccessPage() {
       const result = await googleOAuth(code);
 
       if (result.success) {
-        setAuth(result.data.user);
+        setAuth(result.data.user, result.data.accessToken);
         redirect("/dashboard");
       } else {
         toast("OAuth process failed");

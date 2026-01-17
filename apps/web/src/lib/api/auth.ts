@@ -1,4 +1,5 @@
-import { jsonFetch } from "@/utils/apiFetch";
+import authFetch, { jsonFetch } from "@/utils/apiFetch";
+import { UNAUTHORIZED } from "@subtrack/shared/httpStatusCodes";
 import type {
   LoginSchema,
   RegisterSchema,
@@ -14,6 +15,7 @@ type AuthResponse =
           email: string;
           picture: string;
         };
+        accessToken: string;
       };
     }
   | {
@@ -23,7 +25,7 @@ type AuthResponse =
 
 export const verifyAuth = async (): Promise<AuthResponse> => {
   try {
-    const { response, data } = await jsonFetch("/api/auth/verify", {
+    const { response, data } = await authFetch("/api/auth/verify", {
       cache: "no-store",
     });
     if (response.ok) {
@@ -113,12 +115,25 @@ export const googleOAuth = async (
 
 export const logout = async (): Promise<{ success: true }> => {
   try {
-    await jsonFetch("/api/auth/logout", {
+    await authFetch("/api/auth/logout", {
       method: "DELETE",
     });
     return { success: true };
   } catch (error) {
     console.error(error);
     return { success: true };
+  }
+};
+
+export const refreshToken = async (): Promise<AuthResponse> => {
+  try {
+    const { response, data } = await jsonFetch("/api/auth/refresh");
+    if (response.status === UNAUTHORIZED || !response.ok) {
+      return { success: false, message: data.error };
+    }
+    return { success: true, data };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Token refresh failed" };
   }
 };

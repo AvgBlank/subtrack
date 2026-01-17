@@ -349,10 +349,6 @@ async function main() {
 
   // Clear existing data
   console.log("🧹 Clearing existing data...");
-  await prisma.savingsGoal.deleteMany();
-  await prisma.income.deleteMany();
-  await prisma.oneTimeTransaction.deleteMany();
-  await prisma.recurringTransactions.deleteMany();
   await prisma.user.deleteMany();
 
   // Create test user

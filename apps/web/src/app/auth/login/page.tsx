@@ -41,7 +41,7 @@ const Login = () => {
       }
 
       toast.success("Logged in successfully!");
-      setAuth(result.data.user);
+      setAuth(result.data.user, result.data.accessToken);
       redirect("/dashboard");
     },
   });

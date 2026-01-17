@@ -27,7 +27,7 @@ export default function DashLayout({
       // If user is authenticated skip verification
       const {
         user,
-        actions: { setAuth, clearAuth },
+        actions: { clearAuth },
       } = useAuthStore.getState();
       if (user) {
         setLoading(false);
@@ -37,7 +37,6 @@ export default function DashLayout({
       // Attempt to verify user
       const result = await verifyAuth();
       if (result.success) {
-        setAuth(result.data.user);
         setLoading(false);
       } else {
         clearAuth();

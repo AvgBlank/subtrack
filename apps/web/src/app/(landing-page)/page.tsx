@@ -132,7 +132,9 @@ export default function LandingPage() {
               <Button variant="ghost">Login</Button>
             </Link>
             <Link href="/auth/register">
-              <Button size="sm" className="sm:size-default">Get Started</Button>
+              <Button size="sm" className="sm:size-default">
+                Get Started
+              </Button>
             </Link>
           </div>
         </div>

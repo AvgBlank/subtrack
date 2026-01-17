@@ -42,7 +42,7 @@ const Register = () => {
       }
 
       toast.success("Registered successfully!");
-      setAuth(result.data.user);
+      setAuth(result.data.user, result.data.accessToken);
       redirect("/dashboard");
     },
   });

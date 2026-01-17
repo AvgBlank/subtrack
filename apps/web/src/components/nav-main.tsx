@@ -75,7 +75,9 @@ export function NavMain({
                   className="hover:bg-gradient-to-br hover:from-slate-500/10 hover:to-slate-600/10"
                 >
                   <div
-                    className={"flex h-6 w-6 items-center justify-center rounded-md"}
+                    className={
+                      "flex h-6 w-6 items-center justify-center rounded-md"
+                    }
                   >
                     {item.icon && (
                       <item.icon

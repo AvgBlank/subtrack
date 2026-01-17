@@ -219,6 +219,7 @@ export const handleRefresh = async (refreshToken: string) => {
           id: true,
           name: true,
           email: true,
+          picture: true,
         },
       },
     },

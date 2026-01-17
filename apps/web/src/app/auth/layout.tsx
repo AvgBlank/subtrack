@@ -10,6 +10,7 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
+import { toast } from "sonner";
 
 export default function AuthLayout({
   children,
@@ -24,7 +25,7 @@ export default function AuthLayout({
       // If user is authenticated redirect to dashboard
       const {
         user,
-        actions: { setAuth, clearAuth },
+        actions: { clearAuth },
       } = useAuthStore.getState();
       if (user) {
         redirect("/dashboard");
@@ -33,9 +34,9 @@ export default function AuthLayout({
       // Attempt to verify user
       const result = await verifyAuth();
       if (result.success) {
-        setAuth(result.data.user);
         redirect("/dashboard");
       } else {
+        toast.dismiss();
         clearAuth();
         setLoading(false);
       }

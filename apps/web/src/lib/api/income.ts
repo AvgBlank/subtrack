@@ -1,4 +1,4 @@
-import apiFetch from "@/utils/apiFetch";
+import authFetch from "@/utils/apiFetch";
 
 export type Income = {
   id: string;
@@ -19,7 +19,7 @@ type CreateIncomePayload = {
 type UpdateIncomePayload = Partial<CreateIncomePayload>;
 
 export const getIncomes = async (): Promise<Income[]> => {
-  const { response, data } = await apiFetch("/api/income");
+  const { response, data } = await authFetch("/api/income");
   if (!response.ok) {
     throw new Error(data?.error || "Failed to fetch income");
   }
@@ -27,7 +27,7 @@ export const getIncomes = async (): Promise<Income[]> => {
 };
 
 export const getIncomeById = async (id: string): Promise<Income> => {
-  const { response, data } = await apiFetch(`/api/income/${id}`);
+  const { response, data } = await authFetch(`/api/income/${id}`);
   if (!response.ok) {
     throw new Error(data?.error || "Failed to fetch income");
   }
@@ -37,7 +37,7 @@ export const getIncomeById = async (id: string): Promise<Income> => {
 export const createIncome = async (
   payload: CreateIncomePayload,
 ): Promise<Income> => {
-  const { response, data } = await apiFetch("/api/income", {
+  const { response, data } = await authFetch("/api/income", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -52,7 +52,7 @@ export const updateIncome = async (
   id: string,
   payload: UpdateIncomePayload,
 ): Promise<Income> => {
-  const { response, data } = await apiFetch(`/api/income/${id}`, {
+  const { response, data } = await authFetch(`/api/income/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -67,7 +67,7 @@ export const toggleIncomeStatus = async (
   id: string,
   isActive: boolean,
 ): Promise<Income> => {
-  const { response, data } = await apiFetch(`/api/income/${id}/toggle`, {
+  const { response, data } = await authFetch(`/api/income/${id}/toggle`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ isActive }),
@@ -79,7 +79,7 @@ export const toggleIncomeStatus = async (
 };
 
 export const deleteIncome = async (id: string): Promise<void> => {
-  const { response, data } = await apiFetch(`/api/income/${id}`, {
+  const { response, data } = await authFetch(`/api/income/${id}`, {
     method: "DELETE",
   });
   if (!response.ok) {

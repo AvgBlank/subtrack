@@ -28,4 +28,5 @@ Dockerfile
 docker-compose.yml
 
 # Environment files
-.env
+.env*
+*.env

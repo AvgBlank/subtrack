@@ -1,0 +1,31 @@
+# Git related
+.git
+.gitignore
+
+# Build & dependency files
+out
+dist
+node_modules
+
+# Cache files & temp files
+**/.turbo
+**/.next
+tmp
+temp
+*.tsbuildinfo
+*.log
+coverage
+
+# Garbage files
+.DS_Store
+
+# IDE related
+.vscode
+.idea
+
+# Docker related
+Dockerfile
+docker-compose.yml
+
+# Environment files
+.env

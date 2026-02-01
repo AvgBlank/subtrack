@@ -1,0 +1,77 @@
+services:
+  db:
+    image: postgres:16-alpine
+    # profiles: ["localdb"]
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: subtrack
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - subtrack
+
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-runner
+    command: bunx prisma migrate deploy
+    env_file:
+      - path: ./apps/api/.env
+        required: false
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/subtrack}
+    networks:
+      - subtrack
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-runner
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - ${PORT:-8080}:8080
+    env_file:
+      - path: ./apps/api/.env
+        required: false
+    environment:
+      PORT: 8080
+      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/subtrack}
+    networks:
+      - subtrack
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web-runner
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - 3000:3000
+    env_file:
+      - path: ./apps/web/.env
+        required: false
+    environment:
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://api:8080
+    networks:
+      - subtrack
+
+volumes:
+  postgres_data: null
+networks:
+  subtrack:
+    driver: bridge

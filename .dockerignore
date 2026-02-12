@@ -25,7 +25,7 @@ coverage
 
 # Docker related
 Dockerfile
-docker-compose.yml
+compose.yml
 
 # Environment files
 .env*

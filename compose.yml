@@ -1,7 +1,10 @@
+x-db-env: &db-env
+  DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/subtrack}
+
 services:
   db:
+    profiles: ["localdb"]
     image: postgres:16-alpine
-    # profiles: ["localdb"]
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -11,35 +14,69 @@ services:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
     networks:
       - subtrack
 
   migrate:
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+    profiles: ["migrate"]
     build:
       context: .
       dockerfile: Dockerfile
-      target: api-runner
-    command: bunx prisma migrate deploy
+      target: prisma
+    command: "bun run db:migrate:deploy"
     env_file:
       - path: ./apps/api/.env
         required: false
     environment:
-      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/subtrack}
+      <<: *db-env
+    networks:
+      - subtrack
+
+  seed:
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+        required: false
+      db:
+        condition: service_healthy
+        required: false
+    profiles: ["seed"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: prisma
+    command: "bun run db:seed"
+    env_file:
+      - path: ./apps/api/.env
+        required: false
+    environment:
+      <<: *db-env
     networks:
       - subtrack
 
   api:
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+      seed:
+        condition: service_completed_successfully
+        required: false
+      migrate:
+        condition: service_completed_successfully
+        required: false
     build:
       context: .
       dockerfile: Dockerfile
       target: api-runner
     restart: unless-stopped
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
     ports:
       - ${PORT:-8080}:8080
     env_file:
@@ -47,18 +84,25 @@ services:
         required: false
     environment:
       PORT: 8080
-      DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@db:5432/subtrack}
+      <<: *db-env
+    healthcheck:
+      test: ["CMD-SHELL", "bun dist/healthy.js"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     networks:
       - subtrack
 
   web:
+    depends_on:
+      api:
+        condition: service_healthy
     build:
       context: .
       dockerfile: Dockerfile
       target: web-runner
     restart: unless-stopped
-    depends_on:
-      - api
     ports:
       - 3000:3000
     env_file:

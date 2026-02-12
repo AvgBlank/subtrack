@@ -345,14 +345,12 @@ const monthPatterns: MonthPattern[] = [
 ];
 
 async function main() {
-  console.log("🌱 Starting seed with CHAOTIC data...\n");
-
   // Clear existing data
-  console.log("🧹 Clearing existing data...");
-  await prisma.user.deleteMany();
+  await prisma.user.deleteMany({
+    where: { email: TEST_USER.email },
+  });
 
   // Create test user
-  console.log("\n👤 Creating test user...");
   const hashedPassword = await hash(TEST_USER.password);
   const user = await prisma.user.create({
     data: {
@@ -381,7 +379,6 @@ async function main() {
   // INCOME - Higher income for better savings potential
   // This is the monthly income that applies every month
   // ============================================
-  console.log("\n💰 Creating income sources...");
 
   // Primary salary - ₹72,000/month (Senior Dev)
   await prisma.income.create({
@@ -393,7 +390,6 @@ async function main() {
       isActive: true,
     },
   });
-  console.log("  ✓ Salary - TechCorp India: ₹72,000/month (active)");
 
   // Side income - ₹13,000/month freelance
   await prisma.income.create({
@@ -405,7 +401,6 @@ async function main() {
       isActive: true,
     },
   });
-  console.log("  ✓ Freelance - Web Dev: ₹13,000/month (active)");
 
   // Old job (inactive - for history)
   await prisma.income.create({
@@ -417,14 +412,10 @@ async function main() {
       isActive: false,
     },
   });
-  console.log("  ✓ Previous Job - StartupXYZ: ₹45,000/month (inactive)");
-
-  console.log("\n  📊 Total Active Monthly Income: ₹85,000");
 
   // ============================================
   // SUBSCRIPTIONS
   // ============================================
-  console.log("\n📺 Creating subscriptions...");
 
   for (const sub of subscriptions) {
     await prisma.recurringTransactions.create({
@@ -439,13 +430,11 @@ async function main() {
         isActive: true,
       },
     });
-    console.log(`  ✓ ${sub.name}: ₹${sub.amount}/month`);
   }
 
   // ============================================
   // BILLS
   // ============================================
-  console.log("\n📃 Creating bills...");
 
   for (const bill of bills) {
     await prisma.recurringTransactions.create({
@@ -460,22 +449,12 @@ async function main() {
         isActive: true,
       },
     });
-    console.log(`  ✓ ${bill.name}: ₹${bill.amount}/month`);
   }
-
-  const totalRecurring =
-    subscriptions.reduce((sum, s) => sum + s.amount, 0) +
-    bills.reduce((sum, b) => sum + b.amount, 0);
-  console.log(
-    `\n  📊 Total Monthly Recurring: ₹${totalRecurring.toLocaleString("en-IN")}`,
-  );
 
   // ============================================
   // ONE-TIME EXPENSES - MAXIMUM CHAOS!
   // ============================================
-  console.log("\n💳 Creating one-time expenses with EXTREME volatility...\n");
 
-  let totalOneTimeCount = 0;
   const monthlyStats: {
     month: string;
     oneTimeTotal: number;
@@ -525,7 +504,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += pattern.megaExpense;
-      totalOneTimeCount++;
     }
 
     // === BIG EXPENSES (main planned/unplanned big purchases) ===
@@ -547,7 +525,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += amount;
-      totalOneTimeCount++;
     }
 
     // === EXTRA CHAOS - Random expensive purchases ===
@@ -600,7 +577,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += chaos.amount;
-      totalOneTimeCount++;
     }
 
     // === GROCERIES (scaled heavily - survival mode = 1-2 trips, splurge = 8+ trips) ===
@@ -622,7 +598,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += Math.max(200, amount);
-      totalOneTimeCount++;
     }
 
     // === FOOD DELIVERY (5-15 times per month, heavily scaled) ===
@@ -642,7 +617,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += amount;
-      totalOneTimeCount++;
     }
 
     // === TRANSPORTATION (3-8 times per month) ===
@@ -662,7 +636,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += amount;
-      totalOneTimeCount++;
     }
 
     // === ENTERTAINMENT (only in higher spending months) ===
@@ -683,7 +656,6 @@ async function main() {
           },
         });
         monthOneTimeTotal += amount;
-        totalOneTimeCount++;
       }
     }
 
@@ -705,7 +677,6 @@ async function main() {
           },
         });
         monthOneTimeTotal += amount;
-        totalOneTimeCount++;
       }
     }
 
@@ -725,7 +696,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += amount;
-      totalOneTimeCount++;
     }
 
     // === HEALTHCARE (occasional) ===
@@ -744,7 +714,6 @@ async function main() {
         },
       });
       monthOneTimeTotal += amount;
-      totalOneTimeCount++;
     }
 
     monthlyStats.push({
@@ -752,34 +721,11 @@ async function main() {
       oneTimeTotal: monthOneTimeTotal,
       pattern: pattern.description,
     });
-
-    // Calculate totals
-    const totalExpenses = monthOneTimeTotal + totalRecurring;
-    const netCashflow = 85000 - totalExpenses;
-    const netEmoji =
-      netCashflow > 40000
-        ? "💚💚"
-        : netCashflow > 20000
-          ? "💚"
-          : netCashflow > 0
-            ? "🟡"
-            : netCashflow > -50000
-              ? "🟠"
-              : "🔴🔴";
-
-    console.log(
-      `  ${monthLabel}: One-time ₹${monthOneTimeTotal.toLocaleString("en-IN").padStart(6)} | ` +
-        `Total ₹${totalExpenses.toLocaleString("en-IN").padStart(6)} | ` +
-        `Net ${netEmoji} ₹${netCashflow.toLocaleString("en-IN").padStart(7)} | ${pattern.description}`,
-    );
   }
-
-  console.log(`\n  ✓ Created ${totalOneTimeCount} one-time transactions`);
 
   // ============================================
   // SAVINGS GOALS (realistic for 53k income)
   // ============================================
-  console.log("\n🎯 Creating savings goals...");
 
   const addMonths = (date: Date, months: number): Date => {
     const result = new Date(date);
@@ -881,12 +827,6 @@ async function main() {
         targetDate: goal.targetDate,
       },
     });
-    const progress = ((goal.currentAmount / goal.targetAmount) * 100).toFixed(
-      0,
-    );
-    console.log(
-      `  ✓ ${goal.name}: ₹${goal.currentAmount.toLocaleString("en-IN")} / ₹${goal.targetAmount.toLocaleString("en-IN")} (${progress}%)`,
-    );
   }
 
   // ============================================

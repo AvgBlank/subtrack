@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 import { APP_ORIGIN } from "@/shared/constants/env";
 import errorHandler from "@/shared/middleware/errorHandler";
+import healthRouter from "@/health/health.router";
 import authRouter from "@/auth/auth.router";
 import summaryRouter from "@/summary/summary.router";
 import recurringRouter from "@/recurring/recurring.router";
@@ -25,9 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routes
-app.get("/", (_req, res) => {
-  res.json("Hello, World!");
-});
+app.use("/", healthRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/summary", summaryRouter);
 app.use("/api/recurring", recurringRouter);

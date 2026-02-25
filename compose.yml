@@ -28,7 +28,7 @@ services:
     profiles: ["migrate"]
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./apps/api/Dockerfile
       target: prisma
     command: "bun run db:migrate:deploy"
     env_file:
@@ -50,7 +50,7 @@ services:
     profiles: ["seed"]
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./apps/api/Dockerfile
       target: prisma
     command: "bun run db:seed"
     env_file:
@@ -74,8 +74,7 @@ services:
         required: false
     build:
       context: .
-      dockerfile: Dockerfile
-      target: api-runner
+      dockerfile: ./apps/api/Dockerfile
     restart: unless-stopped
     ports:
       - ${PORT:-8080}:8080
@@ -100,8 +99,7 @@ services:
         condition: service_healthy
     build:
       context: .
-      dockerfile: Dockerfile
-      target: web-runner
+      dockerfile: ./apps/web/Dockerfile
     restart: unless-stopped
     ports:
       - 3000:3000

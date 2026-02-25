@@ -24,7 +24,7 @@ coverage
 .idea
 
 # Docker related
-Dockerfile
+**/Dockerfile
 compose.yml
 
 # Environment files

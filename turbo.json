@@ -49,6 +49,9 @@
     "check-types": {
       "cache": false
     },
+    "test": {
+      "cache": false
+    },
     "format": {
       "cache": false
     },

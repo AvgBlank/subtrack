@@ -23,7 +23,7 @@ export const loginSchema = z.object({
 });
 
 export const oAuthSchema = z.object({
-  code: z.string("Code must be a string"),
+  code: z.string("Code is required").min(1, "Code must not be empty"),
 });
 
 export const authSchema = z.object({

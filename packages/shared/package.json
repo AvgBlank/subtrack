@@ -8,6 +8,7 @@
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "check-types": "tsc --noEmit",
+    "test": "bun test",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "dependencies": {

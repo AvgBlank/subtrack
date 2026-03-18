@@ -35,7 +35,7 @@ export const config = [
   {
     files: ["**/*.test.ts", "**/*/__tests__/**"],
     rules: {
-      "@typescript-eslint/no-explicit-any": "off"
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ];

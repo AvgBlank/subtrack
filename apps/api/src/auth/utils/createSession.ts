@@ -1,6 +1,7 @@
 import { thirtyDaysFromNow } from "@/shared/constants/dates";
 import prisma from "@/shared/lib/db";
 import { UAParser } from "ua-parser-js";
+import { isIP } from "node:net";
 
 import { Request } from "express";
 
@@ -10,13 +11,37 @@ const maskIp = (ip?: string) => {
   return ip.replace(/\.\d+$/, ".xxx");
 };
 
+const sanitizeIp = (ip?: string) => {
+  if (!ip) return undefined;
+
+  // Some proxies set multiple IPs in headers like "x-forwarded-for"
+  const firstPart = ip.split(",")[0]?.trim();
+  if (!firstPart) {
+    return undefined;
+  }
+
+  if (isIP(firstPart) === 0) {
+    return undefined;
+  }
+  return firstPart;
+};
+
 const iplookup = async (ip?: string) => {
-  if (!ip) {
+  const sanitizedIp = sanitizeIp(ip);
+  if (!sanitizedIp) {
     return "Unknown";
   }
-  const url = "http://ip-api.com/json/" + ip;
 
-  const req = await fetch(url);
+  const base = new URL("http://ip-api.com/json/");
+  base.pathname += sanitizedIp;
+
+  // Extra safety: ensure host is exactly what you expect
+  if (base.hostname !== "ip-api.com") {
+    return "Unknown";
+  }
+
+  const req = await fetch(base.toString());
+
   const data = await req.json();
   if (!req.ok || data.status !== "success") {
     return "Unknown";

@@ -202,7 +202,7 @@ export function AddEditOneTimeModal({
                     value={field.state.value}
                     onValueChange={(value) => field.handleChange(value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Category">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>

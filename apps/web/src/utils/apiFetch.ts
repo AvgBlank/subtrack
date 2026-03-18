@@ -6,17 +6,30 @@ import { toast } from "sonner";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
-export async function jsonFetch(url: string, options: RequestInit = {}) {
+export async function jsonFetch(
+  url: string,
+  options: RequestInit = {},
+  output: "blob" | "json" = "json",
+) {
   const response = await fetch(`${BASE_API_URL}${url}`, {
     ...options,
     credentials: "include",
   });
-  const data = await response.json().catch(() => null);
+  let data;
+  if (output === "json") {
+    data = await response.json().catch(() => null);
+  } else {
+    data = await response.blob().catch(() => null);
+  }
 
   return { response, data };
 }
 
-const doFetch = (url: string, options: RequestInit = {}) => {
+const doFetch = (
+  url: string,
+  options: RequestInit = {},
+  output: "blob" | "json" = "json",
+) => {
   const { token } = useAuthStore.getState();
 
   const headers = new Headers(options.headers);
@@ -24,18 +37,26 @@ const doFetch = (url: string, options: RequestInit = {}) => {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  return jsonFetch(url, {
-    ...options,
-    headers,
-  });
+  return jsonFetch(
+    url,
+    {
+      ...options,
+      headers,
+    },
+    output,
+  );
 };
 
-const authFetch = async (url: string, options: RequestInit = {}) => {
+const authFetch = async (
+  url: string,
+  options: RequestInit = {},
+  output: "blob" | "json" = "json",
+) => {
   const {
     actions: { clearAuth, setAuth },
   } = useAuthStore.getState();
 
-  let { response, data } = await doFetch(url, options);
+  let { response, data } = await doFetch(url, options, output);
 
   if (response.status === UNAUTHORIZED && data?.errorCode) {
     if (data.errorCode === "InvalidAccessToken") {

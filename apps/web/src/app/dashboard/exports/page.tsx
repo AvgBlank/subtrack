@@ -20,8 +20,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+import authFetch from "@/utils/apiFetch";
 
 type ExportType =
   | "monthly-summary"
@@ -110,9 +109,11 @@ export default function ExportsPage() {
     setIsExporting(true);
 
     try {
-      const response = await fetch(`${BASE_API_URL}/api/exports`, {
+      const { response, data } = await authFetch(`/api/exports`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
         body: JSON.stringify({
           startMonth,
@@ -122,12 +123,7 @@ export default function ExportsPage() {
           exportType,
           format,
         }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Export failed");
-      }
+      }, "blob");
 
       // Get filename from Content-Disposition header
       const contentDisposition = response.headers.get("Content-Disposition");
@@ -135,8 +131,7 @@ export default function ExportsPage() {
       const filename = filenameMatch?.[1] || `export.${format}`;
 
       // Download the file
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(data);
       const a = document.createElement("a");
       a.href = url;
       a.download = filename;

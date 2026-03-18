@@ -205,7 +205,7 @@ export function AddEditRecurringModal({
                         field.handleChange(value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Type">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -236,7 +236,7 @@ export function AddEditRecurringModal({
                         field.handleChange(value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger aria-label="Frequency">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -266,7 +266,7 @@ export function AddEditRecurringModal({
                     value={field.state.value}
                     onValueChange={(value) => field.handleChange(value)}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger aria-label="Category">
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
                     <SelectContent>

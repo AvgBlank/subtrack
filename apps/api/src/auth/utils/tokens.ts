@@ -54,7 +54,8 @@ export const verifyAccessToken = async (token: string) => {
       payload: Payload;
     };
     return payload;
-  } catch {
+  } catch (err) {
+    console.error("verifyAccessToken error:", err);
     return null;
   }
 };

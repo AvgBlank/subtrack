@@ -17,15 +17,6 @@ else
     echo "✅ Bun detected: $(bun -v)"
 fi
 
-echo "📦 Installing Dependencies..."
-bun install --frozen-lockfile
-
-echo "🔄 Generating Prisma Client..."
-bun run db:generate -- --ui=stream-with-experimental-timestamps
-
-echo "🔨 Building the project..."
-bun run build -- --ui=stream-with-experimental-timestamps
-
 # Create .env files if they don't exist
 if [ ! -f apps/api/.env ]; then
     echo "⚠️  Creating api .env from example..."
@@ -38,6 +29,15 @@ if [ ! -f apps/web/.env ]; then
     cp apps/web/.env.sample apps/web/.env
     echo "✅ Created .env"
 fi
+
+echo "📦 Installing Dependencies..."
+bun install --frozen-lockfile
+
+echo "🔄 Generating Prisma Client..."
+bun run db:generate -- --ui=stream-with-experimental-timestamps
+
+echo "🔨 Building the project..."
+bun run build -- --ui=stream-with-experimental-timestamps
 
 echo "🐳 Database setup..."
 if command -v docker-compose &> /dev/null; then

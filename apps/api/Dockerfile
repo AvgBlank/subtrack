@@ -4,7 +4,7 @@ FROM oven/bun:1.3.9-alpine AS base
 # Prune using TurboRepo
 FROM base AS pruner
 WORKDIR /app
-RUN bun install -g turbo@2.8.11
+RUN bun install -g turbo@2.8.19
 COPY . .
 RUN turbo prune @subtrack/api --docker
 
@@ -18,7 +18,7 @@ RUN bun install --frozen-lockfile
 COPY --from=pruner /app/out/full .
 # Temporary DB URL for generating prisma types
 ARG DATABASE_URL="postgresql://prisma:prisma@localhost:5432/temp"
-RUN DATABASE_URL=${DATABASE_URL} bun turbo build
+RUN DATABASE_URL=${DATABASE_URL} bun run build
 
 # For prisma commands
 FROM builder AS prisma

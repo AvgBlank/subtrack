@@ -4,7 +4,7 @@ FROM oven/bun:1.3.9-alpine AS base
 # Prune using TurboRepo
 FROM base AS pruner
 WORKDIR /app
-RUN bun install -g turbo@2.8.11
+RUN bun install -g turbo@2.8.19
 COPY . .
 RUN turbo prune @subtrack/web --docker
 
@@ -16,7 +16,7 @@ COPY --from=pruner /app/out/json/ .
 RUN bun install --frozen-lockfile
 # Build
 COPY --from=pruner /app/out/full .
-RUN bun turbo build
+RUN bun run build
 
 # Runner
 FROM base AS runner

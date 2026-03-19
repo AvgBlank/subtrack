@@ -32,7 +32,7 @@ describe("Recurring Router Integration", () => {
   });
 
   beforeEach(() => {
-    (prisma.session.findFirst as any).mockClear();
+    (prisma.session.findUnique as any).mockClear();
     (prisma.session.update as any).mockClear();
     (prisma.recurringTransactions.findMany as any).mockClear();
     (prisma.recurringTransactions.findFirst as any).mockClear();
@@ -41,7 +41,7 @@ describe("Recurring Router Integration", () => {
     (prisma.recurringTransactions.delete as any).mockClear();
 
     // Mock successful auth
-    (prisma.session.findFirst as any).mockResolvedValue({
+    (prisma.session.findUnique as any).mockResolvedValue({
       id: "test-session-id",
       userId: "test-user-id",
       user: { id: "test-user-id" },

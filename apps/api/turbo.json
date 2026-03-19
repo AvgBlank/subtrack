@@ -10,6 +10,9 @@
     },
     "check-types": {
       "dependsOn": ["@subtrack/shared#build", "@subtrack/api#db:generate"]
+    },
+    "test": {
+      "dependsOn": ["@subtrack/shared#build", "@subtrack/api#db:generate"]
     }
   }
 }

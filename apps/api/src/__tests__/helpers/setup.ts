@@ -1,6 +1,7 @@
 import { mock } from "bun:test";
 import { Server } from "http";
 import app from "../../app";
+import { generateTokens } from "@/auth/utils/tokens";
 
 // Mock env constants that we need
 mock.module("../../shared/constants/env", () => ({
@@ -26,7 +27,10 @@ export const createTestServer = () => {
   });
 };
 
-export const MOCK_VALID_TOKEN =
-  "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiJ0ZXN0LXVzZXItaWQiLCJzZXNzaW9uSWQiOiJ0ZXN0LXNlc3Npb24taWQiLCJleHAiOjk5OTk5OTk5OTl9.vb9oOdU8u8wO43ZBUL2NYk0sXf40sEupPGcP65YqGI3el7gCtmRRUMAgg6qpmQrBa_YgpUcy-3f0l337vwJ__g";
-export const MOCK_VALID_REFRESH_TOKEN =
-  "eyJhbGciOiJIUzUxMiJ9.eyJ1c2VySWQiOiJ0ZXN0LXVzZXItaWQiLCJzZXNzaW9uSWQiOiJ0ZXN0LXNlc3Npb24taWQiLCJleHAiOjk5OTk5OTk5OTl9.Fq7u_JaKjQ_v9iGNIcPnwuHtuQG46QcHXv51c-IV02SHWIk5COQ-AONboQ-2fkmLAojsaqYujwtvm9fr_26QNw";
+export const {
+  accessToken: MOCK_VALID_TOKEN,
+  refreshToken: MOCK_VALID_REFRESH_TOKEN,
+} = await generateTokens({
+  userId: "user-id",
+  sessionId: "test-session-id",
+});

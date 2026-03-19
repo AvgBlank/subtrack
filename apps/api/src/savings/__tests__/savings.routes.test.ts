@@ -32,14 +32,14 @@ describe("Savings Router Integration", () => {
   });
 
   beforeEach(() => {
-    (prisma.session.findFirst as any).mockClear();
+    (prisma.session.findUnique as any).mockClear();
     (prisma.savingsGoal.findMany as any).mockClear();
     (prisma.savingsGoal.findFirst as any).mockClear();
     (prisma.savingsGoal.create as any).mockClear();
     (prisma.savingsGoal.update as any).mockClear();
     (prisma.savingsGoal.delete as any).mockClear();
 
-    (prisma.session.findFirst as any).mockResolvedValue({
+    (prisma.session.findUnique as any).mockResolvedValue({
       id: "test-session-id",
       userId: "test-user-id",
       user: { id: "test-user-id" },

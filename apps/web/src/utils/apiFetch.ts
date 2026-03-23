@@ -4,7 +4,7 @@ import { UNAUTHORIZED } from "@subtrack/shared/httpStatusCodes";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export async function jsonFetch(
   url: string,

@@ -18,11 +18,7 @@ RUN bun install --frozen-lockfile
 COPY --from=pruner /app/out/full .
 # Temporary DB URL for generating prisma types
 ARG DATABASE_URL="postgresql://prisma:prisma@localhost:5432/temp"
-RUN DATABASE_URL=${DATABASE_URL} bun run build
-
-# For prisma commands
-FROM builder AS prisma
-WORKDIR /app/apps/api
+RUN bun run build
 
 # Runner
 FROM base AS runner

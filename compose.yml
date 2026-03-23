@@ -31,7 +31,6 @@ services:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
-      target: prisma
     command: "bun run db:migrate:deploy"
     env_file:
       - path: ./apps/api/.env
@@ -53,7 +52,6 @@ services:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
-      target: prisma
     command: "bun run db:seed"
     env_file:
       - path: ./apps/api/.env

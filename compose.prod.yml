@@ -103,6 +103,9 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.network=subtrack"
       - "--entrypoints.web.address=:80"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--accesslog=true"
     ports:
       - "80:80"
     volumes:
@@ -115,4 +118,5 @@ volumes:
 networks:
   subtrack:
     driver: bridge
+    name: subtrack
 

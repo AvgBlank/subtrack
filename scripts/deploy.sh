@@ -1,36 +1,38 @@
 #!/bin/bash
-# scripts/deploy.sh
-# Idempotent script for production deployment (typically to an EC2 instance)
-
 set -e
 
 echo "🚀 Starting Deployment Process..."
 
-# 2. Check for required env files in api and web
-if [ ! -f "apps/api/.env" ] || [ ! -f "apps/web/.env" ]; then
-  echo "❌ Missing .env file. Deployment halted."
+missing=()
+
+[ -z "$APP_ORIGIN" ] && missing+=("APP_ORIGIN")
+[ -z "$DATABASE_URL" ] && missing+=("DATABASE_URL")
+[ -z "$ACCESS_TOKEN_SECRET" ] && missing+=("ACCESS_TOKEN_SECRET")
+[ -z "$REFRESH_TOKEN_SECRET" ] && missing+=("REFRESH_TOKEN_SECRET")
+[ -z "$GOOGLE_CLIENT_ID" ] && missing+=("GOOGLE_CLIENT_ID")
+[ -z "$GOOGLE_CLIENT_SECRET" ] && missing+=("GOOGLE_CLIENT_SECRET")
+[ -z "$GOOGLE_REDIRECT_URI" ] && missing+=("GOOGLE_REDIRECT_URI")
+
+[ -z "$NEXT_PUBLIC_GOOGLE_CLIENT_ID" ] && missing+=("NEXT_PUBLIC_GOOGLE_CLIENT_ID")
+[ -z "$NEXT_PUBLIC_GOOGLE_REDIRECT_URI" ] && missing+=("NEXT_PUBLIC_GOOGLE_REDIRECT_URI")
+
+if [ ${#missing[@]} -ne 0 ]; then
+  echo "Missing required environment variables:"
+  for var in "${missing[@]}"; do
+    echo "  - $var"
+  done
   exit 1
 fi
 
-# 3. Build containers
-echo "🏗️  Building Docker Containers..."
-# Uses the docker-compose file which handles building API and WEB images
-docker compose --profile localdb --profile migrate build
+echo "📦 Pulling latest images..."
+# docker compose pull
 
-# 4. Migrate database
-echo "🗄️  Running Database Migrations..."
-# Start the postgres service first if not already running
-docker compose up -d db migrate
-
-echo "⏳ Waiting for migrations to be applied..."
-sleep 3
-
-# 5. Restart services with zero-ish downtime
-echo "🔄 Restarting Services..."
-# Recreate only changed containers
-docker compose up -d --no-deps db api web
+echo "🗄️ Running database + services..."
+docker compose -f prod.compose.yml up -d db
+docker compose -f prod.compose.yml run --rm migrate
+docker compose -f prod.compose.yml up -d --no-deps api web nginx
 
 echo "🧹 Cleaning up old images..."
 docker image prune -f
 
-echo "✅ Deployment completed successfully! 🎉"
+echo "✅ Deployment completed successfully!"

@@ -1,4 +1,4 @@
-import { PrismaClient, Type, Frequency } from "../src/generated/prisma/client";
+import { PrismaClient, Type, Frequency } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "argon2";
 

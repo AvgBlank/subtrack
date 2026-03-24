@@ -14,6 +14,12 @@ WORKDIR /app
 # Install dependencies
 COPY --from=pruner /app/out/json/ .
 RUN bun install --frozen-lockfile
+# Build-Time Environment Variables for Google OAuth
+ARG NEXT_PUBLIC_API_URL=""
+ARG NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$NEXT_PUBLIC_GOOGLE_CLIENT_ID
+ARG NEXT_PUBLIC_GOOGLE_REDIRECT_URI
+ENV NEXT_PUBLIC_GOOGLE_REDIRECT_URI=$NEXT_PUBLIC_GOOGLE_REDIRECT_URI
 # Build
 COPY --from=pruner /app/out/full .
 RUN bun run build

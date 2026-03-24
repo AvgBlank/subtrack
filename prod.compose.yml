@@ -1,0 +1,117 @@
+x-db-env: &db-env
+  DATABASE_URL: ${DATABASE_URL}
+
+services:
+  db:
+    profiles: ["localdb"]
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: subtrack
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+    networks:
+      - subtrack
+
+  migrate:
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+    profiles: ["migrate"]
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    command: "bun run db:migrate:deploy"
+    environment:
+      <<: *db-env
+    networks:
+      - subtrack
+
+  seed:
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+        required: false
+      db:
+        condition: service_healthy
+        required: false
+    profiles: ["seed"]
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    command: "bun run db:seed"
+    environment:
+      <<: *db-env
+    networks:
+      - subtrack
+
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      APP_ORIGIN: ${APP_ORIGIN}
+      # Auth
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      # OAuth
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI}
+      # DB
+      <<: *db-env
+    healthcheck:
+      test: ["CMD-SHELL", "bun run healthcheck"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    networks:
+      - subtrack
+
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      args:
+        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+        - NEXT_PUBLIC_GOOGLE_REDIRECT_URI=${NEXT_PUBLIC_GOOGLE_REDIRECT_URI}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+    networks:
+      - subtrack
+
+  nginx:
+    depends_on:
+      api:
+        condition: service_healthy
+      web:
+        condition: service_started
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - subtrack
+
+volumes:
+  postgres_data: null
+networks:
+  subtrack:
+    driver: bridge
+

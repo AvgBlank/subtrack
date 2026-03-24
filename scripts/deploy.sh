@@ -25,9 +25,11 @@ echo "📦 Pulling latest images..."
 docker compose pull
 
 echo "🗄️ Running database + services..."
-docker compose -f prod.compose.yml up -d db
-docker compose -f prod.compose.yml run --rm migrate
-docker compose -f prod.compose.yml up -d --no-deps api web nginx
+docker compose -f compose.prod.yml --profile localdb up -d --wait db
+docker compose -f compose.prod.yml --profile migrate run --rm migrate
+docker compose -f compose.prod.yml up -d --no-deps --wait api
+docker compose -f compose.prod.yml up -d --no-deps web
+docker compose -f compose.prod.yml up -d --no-deps traefik
 
 echo "🧹 Cleaning up old images..."
 docker image prune -f

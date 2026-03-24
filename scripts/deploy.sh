@@ -13,9 +13,6 @@ missing=()
 [ -z "$GOOGLE_CLIENT_SECRET" ] && missing+=("GOOGLE_CLIENT_SECRET")
 [ -z "$GOOGLE_REDIRECT_URI" ] && missing+=("GOOGLE_REDIRECT_URI")
 
-[ -z "$NEXT_PUBLIC_GOOGLE_CLIENT_ID" ] && missing+=("NEXT_PUBLIC_GOOGLE_CLIENT_ID")
-[ -z "$NEXT_PUBLIC_GOOGLE_REDIRECT_URI" ] && missing+=("NEXT_PUBLIC_GOOGLE_REDIRECT_URI")
-
 if [ ${#missing[@]} -ne 0 ]; then
   echo "Missing required environment variables:"
   for var in "${missing[@]}"; do
@@ -25,7 +22,7 @@ if [ ${#missing[@]} -ne 0 ]; then
 fi
 
 echo "📦 Pulling latest images..."
-# docker compose pull
+docker compose pull
 
 echo "🗄️ Running database + services..."
 docker compose -f prod.compose.yml up -d db

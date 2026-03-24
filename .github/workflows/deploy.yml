@@ -17,10 +17,10 @@ jobs:
       DATABASE_URL: "postgresql://prisma:prisma@localhost:5432/temp"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -36,10 +36,10 @@ jobs:
       DATABASE_URL: "postgresql://prisma:prisma@localhost:5432/temp"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
@@ -55,13 +55,13 @@ jobs:
       commit_hash: ${{ steps.get_commit.outputs.commit_hash }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get commit hash
         id: get_commit
         run: echo "::set-output name=commit_hash::$(git rev-parse HEAD)"
 
-  build-and-push-image:
+  build-and-push-web-image:
     needs:
       - tests
       - lint
@@ -69,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set short git commit SHA
         id: vars
@@ -81,26 +81,55 @@ jobs:
         run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build web app Docker image
-      - name: Build and push web Docker image
-        uses: docker/build-push-action@v5
+      # Build the Docker image
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./apps/web/Dockerfile
           push: true
+          build-args: |
+            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+            NEXT_PUBLIC_GOOGLE_REDIRECT_URI=${{ secrets.NEXT_PUBLIC_GOOGLE_REDIRECT_URI }}
           tags: |
             ghcr.io/${{ env.REPO_LC }}-web:${{ needs.commit-hash.outputs.commit_hash }}
             ghcr.io/${{ env.REPO_LC }}-web:latest
 
-      # Build api Docker image
-      - name: Build and push api Docker image
-        uses: docker/build-push-action@v5
+  build-and-push-api-image:
+    needs:
+      - tests
+      - lint
+      - commit-hash
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set short git commit SHA
+        id: vars
+        run: |
+          calculatedSha=$(git rev-parse --short ${{ github.sha }})
+          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+
+      - name: Convert the repo name to lowercase
+        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build the Docker image
+      - name: Build and push the Docker image
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./apps/api/Dockerfile

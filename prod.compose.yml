@@ -26,9 +26,7 @@ services:
         condition: service_healthy
         required: false
     profiles: ["migrate"]
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+    image: ghcr.io/avgblank/subtrack-api:latest
     command: "bun run db:migrate:deploy"
     environment:
       <<: *db-env
@@ -44,9 +42,7 @@ services:
         condition: service_healthy
         required: false
     profiles: ["seed"]
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+    image: ghcr.io/avgblank/subtrack-api:latest
     command: "bun run db:seed"
     environment:
       <<: *db-env
@@ -54,9 +50,7 @@ services:
       - subtrack
 
   api:
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+    image: ghcr.io/avgblank/subtrack-api:latest
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -81,12 +75,7 @@ services:
       - subtrack
 
   web:
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-      args:
-        - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-        - NEXT_PUBLIC_GOOGLE_REDIRECT_URI=${NEXT_PUBLIC_GOOGLE_REDIRECT_URI}
+    image: ghcr.io/avgblank/subtrack-web:latest
     restart: unless-stopped
     environment:
       NODE_ENV: production

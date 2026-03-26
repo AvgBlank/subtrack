@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 test.describe("Theme & UI Layout E2E", () => {
   test.beforeEach(async ({ page }) => {
@@ -48,24 +48,26 @@ test.describe("Theme & UI Layout E2E", () => {
       { name: "Exports", url: "/dashboard/exports" },
     ];
 
-
-
     for (const link of links) {
       // Open groups if collapsed
       const manageBtn = page.getByRole("button", { name: "Manage" });
-      if (await manageBtn.isVisible() && (await manageBtn.getAttribute("data-state")) === "closed") {
+      if (
+        (await manageBtn.isVisible()) &&
+        (await manageBtn.getAttribute("data-state")) === "closed"
+      ) {
         await manageBtn.click();
         await page.waitForTimeout(100); // allow animation
       }
       const insightsBtn = page.getByRole("button", { name: "Insights" });
-      if (await insightsBtn.isVisible() && (await insightsBtn.getAttribute("data-state")) === "closed") {
+      if (
+        (await insightsBtn.isVisible()) &&
+        (await insightsBtn.getAttribute("data-state")) === "closed"
+      ) {
         await insightsBtn.click();
         await page.waitForTimeout(100); // allow animation
       }
 
-      await page
-        .getByRole("link", { name: link.name, exact: true })
-        .click();
+      await page.getByRole("link", { name: link.name, exact: true }).click();
       await page.waitForURL(`**${link.url}`);
       await expect(page).toHaveURL(new RegExp(`.*${link.url}`));
     }

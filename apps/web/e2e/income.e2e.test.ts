@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 test.describe("Income E2E", () => {
   test.beforeEach(async ({ page }) => {

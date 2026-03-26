@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 test.describe("Dashboard & Analytics E2E", () => {
   const customEmail = `test-${crypto.randomUUID()}@example.com`;

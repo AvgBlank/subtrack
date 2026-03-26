@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 test.describe("Recurring Transactions E2E", () => {
   const customEmail = `test-${crypto.randomUUID()}@example.com`;
@@ -59,7 +59,9 @@ test.describe("Recurring Transactions E2E", () => {
     await expect(row.getByText("₹10.99").first()).toBeVisible();
 
     // Edit (Assume row actions dropdown)
-    await row.getByRole("button", { name: /^Edit Spotify Subscription$/i }).click();
+    await row
+      .getByRole("button", { name: /^Edit Spotify Subscription$/i })
+      .click();
 
     await page.getByLabel(/amount/i).fill("12.99");
     await page.getByRole("button", { name: /^update$/i }).click();
@@ -67,18 +69,20 @@ test.describe("Recurring Transactions E2E", () => {
     await expect(row.getByText("₹12.99").first()).toBeVisible();
 
     // Delete
-    await row.getByRole("button", { name: /^Edit Spotify Subscription$/i }).click();
+    await row
+      .getByRole("button", { name: /^Edit Spotify Subscription$/i })
+      .click();
     await page.getByRole("button", { name: /^Delete$/i }).click();
-    
+
     // Confirm delete dialog
     await page.getByRole("button", { name: /^Yes, delete$/i }).click();
 
-    await expect(page.getByText("Spotify Subscription").first()).not.toBeVisible();
+    await expect(
+      page.getByText("Spotify Subscription").first(),
+    ).not.toBeVisible();
   });
 
-  test("should create, edit, and delete a recurring bill", async ({
-    page,
-  }) => {
+  test("should create, edit, and delete a recurring bill", async ({ page }) => {
     // Create
     await page.getByRole("button", { name: /^Add Recurring$/i }).click();
 
@@ -118,7 +122,7 @@ test.describe("Recurring Transactions E2E", () => {
     // Delete
     await row.getByRole("button", { name: /^Edit Electric Bill$/i }).click();
     await page.getByRole("button", { name: /^Delete$/i }).click();
-    
+
     // Confirm delete dialog
     await page.getByRole("button", { name: /^Yes, delete$/i }).click();
 

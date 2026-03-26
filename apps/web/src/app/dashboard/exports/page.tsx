@@ -109,21 +109,25 @@ export default function ExportsPage() {
     setIsExporting(true);
 
     try {
-      const { response, data } = await authFetch(`/api/exports`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const { response, data } = await authFetch(
+        `/api/exports`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            startMonth,
+            startYear,
+            endMonth,
+            endYear,
+            exportType,
+            format,
+          }),
         },
-        credentials: "include",
-        body: JSON.stringify({
-          startMonth,
-          startYear,
-          endMonth,
-          endYear,
-          exportType,
-          format,
-        }),
-      }, "blob");
+        "blob",
+      );
 
       // Get filename from Content-Disposition header
       const contentDisposition = response.headers.get("Content-Disposition");

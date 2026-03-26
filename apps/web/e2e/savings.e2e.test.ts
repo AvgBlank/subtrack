@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 test.describe("Savings Goals E2E", () => {
   test.beforeEach(async ({ page }) => {
@@ -45,8 +45,13 @@ test.describe("Savings Goals E2E", () => {
     await card.getByRole("button", { name: /^Delete$/i }).click();
 
     // Confirm delete in the dialog
-    await page.getByRole("dialog").getByRole("button", { name: /^Delete$/i }).click();
+    await page
+      .getByRole("dialog")
+      .getByRole("button", { name: /^Delete$/i })
+      .click();
 
-    await expect(page.getByRole("heading", { name: "Vacation Fund" })).not.toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Vacation Fund" }),
+    ).not.toBeVisible();
   });
 });

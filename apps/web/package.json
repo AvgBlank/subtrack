@@ -45,7 +45,6 @@
     "@subtrack/typescript-config": "workspace:*",
     "@tailwindcss/postcss": "^4",
     "@types/bun": "^1.3.11",
-    "@types/node": "^25.5.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9.39.4",

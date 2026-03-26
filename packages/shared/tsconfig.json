@@ -1,7 +1,9 @@
 {
   "extends": "@subtrack/typescript-config/base.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["bun"],
+    "rootDir": "src"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/__tests__"]

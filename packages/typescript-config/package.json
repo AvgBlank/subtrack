@@ -1,12 +1,12 @@
 {
   "name": "@subtrack/typescript-config",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\""
   },
   "devDependencies": {
-    "prettier": "^3.6.2"
+    "prettier": "^3.8.1"
   },
   "exports": {
     "./base.json": "./base.json",

@@ -18,8 +18,6 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "removeComments": true,
-    "declaration": true,
-    "declarationMap": true,
     "emitDeclarationOnly": false,
     "incremental": true
   }

@@ -32,10 +32,4 @@ export const config = [
   {
     ignores: ["dist/**"],
   },
-  {
-    files: ["**/*.test.ts", "**/*/__tests__/**"],
-    rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-    },
-  },
 ];

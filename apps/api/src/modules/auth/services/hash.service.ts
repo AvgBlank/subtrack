@@ -1,0 +1,16 @@
+import { verify, hash } from "argon2";
+
+export interface HashService {
+  hash(password: string): Promise<string>;
+  verify(hashedPassword: string, password: string): Promise<boolean>;
+}
+
+export class Argon2HashService implements HashService {
+  public async hash(password: string) {
+    return await hash(password);
+  }
+
+  public async verify(hashedPassword: string, password: string) {
+    return await verify(hashedPassword, password);
+  }
+}

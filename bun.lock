@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "subtrack",
@@ -75,7 +76,6 @@
         "zustand": "^5.0.12",
       },
       "devDependencies": {
-        "@playwright/test": "^1.59.1",
         "@subtrack/eslint-config": "workspace:*",
         "@subtrack/typescript-config": "workspace:*",
         "@tailwindcss/postcss": "^4",

@@ -1,42 +1,57 @@
-import express from "express";
-import cors from "cors";
+import appLogger from "@subtrack/shared/logging";
 import cookieParser from "cookie-parser";
+import cors from "cors";
+import express from "express";
 
-import { APP_ORIGIN } from "@/shared/constants/env";
-import errorHandler from "@/shared/middleware/errorHandler";
-import healthRouter from "@/health/health.router";
-import summaryRouter from "@/summary/summary.router";
-import recurringRouter from "@/recurring/recurring.router";
-import incomeRouter from "@/income/income.router";
-import oneTimeRouter from "@/one-time/one-time.router";
-import savingsRouter from "@/savings/savings.router";
-import exportsRouter from "@/exports/exports.router";
-import authRouter from "@/modules/auth/auth.router";
+import { EnvService } from "@/constants/env";
+import errorHandler from "@/middleware/errorHandler";
 
-const app = express();
+export interface Route {
+  path: string;
+  router: express.Router;
+}
 
-// Configure Express
-app.use(
-  cors({
-    origin: APP_ORIGIN,
-    credentials: true,
-  }),
-);
-app.use(express.json());
-app.use(cookieParser());
-app.set("trust proxy", 1);
+class App {
+  private app: express.Application;
+  private config: EnvService;
 
-// Routes
-app.use("/", healthRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/summary", summaryRouter);
-app.use("/api/recurring", recurringRouter);
-app.use("/api/income", incomeRouter);
-app.use("/api/one-time", oneTimeRouter);
-app.use("/api/savings", savingsRouter);
-app.use("/api/exports", exportsRouter);
+  constructor(routes: Route[], config: EnvService) {
+    this.config = config;
 
-// Error Handler
-app.use(errorHandler);
+    this.app = express();
+    this.setupMiddleware();
+    this.setupRoutes(routes);
+    this.setupErrorHandling();
+  }
 
-export default app;
+  private setupMiddleware() {
+    this.app.use(
+      cors({
+        origin: this.config.get("APP_ORIGIN"),
+        credentials: true,
+      }),
+    );
+    this.app.use(express.json());
+    this.app.use(cookieParser());
+    this.app.set("trust proxy", 1);
+  }
+
+  private setupRoutes(routes: Route[]) {
+    routes.forEach((route) => this.app.use(route.path, route.router));
+  }
+
+  private setupErrorHandling() {
+    this.app.use(errorHandler);
+  }
+
+  public startServer() {
+    const port = this.config.get("PORT");
+    this.app.listen(port, () => {
+      appLogger({
+        message: `Server is running on http://localhost:${port}`,
+        level: "info",
+      });
+    });
+  }
+}
+export default App;

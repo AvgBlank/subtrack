@@ -1,8 +1,9 @@
 import { Router } from "express";
-import * as summaryController from "@/summary/summary.controller";
-import authenticate from "@/shared/middleware/authMiddleware";
 import rateLimit from "express-rate-limit";
+
 import { NODE_ENV } from "@/shared/constants/env";
+import authenticate from "@/shared/middleware/authMiddleware";
+import * as summaryController from "@/summary/summary.controller";
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

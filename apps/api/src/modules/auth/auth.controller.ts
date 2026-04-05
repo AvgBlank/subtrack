@@ -1,8 +1,9 @@
-import type { Request, Response } from "express";
-import { headerSchema, registerSchema } from "@subtrack/shared/schemas/auth";
-import AuthService from "@/modules/auth/auth.service";
 import { CREATED } from "@subtrack/shared/httpStatusCodes";
-import { setAuthCookie } from "@/shared/utils/cookies";
+import { headerSchema, registerSchema } from "@subtrack/shared/schemas/auth";
+import type { Request, Response } from "express";
+
+import AuthService from "@/modules/auth/auth.service";
+import { setAuthCookie } from "@/utils/cookies";
 
 const getHeader = (req: Request, headerName: string): string | undefined => {
   const headerValue = req.headers[headerName.toLowerCase()];

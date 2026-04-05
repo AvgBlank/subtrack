@@ -1,27 +1,33 @@
+import { thirtyDaysFromNow } from "@/constants/dates";
 import { SessionRepository } from "@/modules/auth/repositories/session.repository";
-import { thirtyDaysFromNow } from "@/shared/constants/dates";
-import { UAParser } from "ua-parser-js";
-import { iplookup, maskIp } from "@/modules/auth/services/ip.service";
+import { DeviceService } from "@/modules/auth/services/device.service";
+import { NetworkService } from "@/modules/auth/services/network.service";
 
-export class SessionService {
-  public constructor(private sessionRepo: SessionRepository) {}
+export interface ISessionService {
+  createSession(
+    userId: string,
+    userAgent?: string,
+    ip?: string,
+  ): Promise<{ id: string }>;
+}
+
+export class SessionService implements ISessionService {
+  public constructor(
+    private sessionRepo: SessionRepository,
+    private networkService: NetworkService,
+    private deviceService: DeviceService,
+  ) {}
 
   public async createSession(
     userId: string,
     userAgent: string = "Unknown",
     ip?: string,
   ) {
-    const parsed = UAParser(userAgent);
-
-    const userInfo = {
-      browser: parsed.browser.name || "Unknown",
-      os: parsed.os.name || "Unknown",
-      device: parsed.device.type || "Unknown",
-    };
+    const userInfo = this.deviceService.parse(userAgent);
 
     const ipInfo = {
-      ipAddress: maskIp(ip),
-      location: await iplookup(ip),
+      ipAddress: this.networkService.maskIp(ip),
+      location: await this.networkService.lookupIp(ip),
     };
 
     return this.sessionRepo.create({

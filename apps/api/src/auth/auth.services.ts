@@ -1,11 +1,13 @@
-import prisma from "@/shared/lib/db";
-import AppError, { AppErrorCode } from "@/shared/utils/AppError";
 import {
   CONFLICT,
   INTERNAL_SERVER_ERROR,
   UNAUTHORIZED,
 } from "@subtrack/shared/httpStatusCodes";
-import { verify, hash } from "argon2";
+import appLogger from "@subtrack/shared/logging";
+import { hash, verify } from "argon2";
+import { Request } from "express";
+
+import createSession from "@/auth/utils/createSession";
 import {
   generateAccessToken,
   generateRefreshToken,
@@ -13,15 +15,14 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "@/auth/utils/tokens";
+import { thirtyDaysFromNow, twentyFourHours } from "@/shared/constants/dates";
 import {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
 } from "@/shared/constants/env";
-import createSession from "@/auth/utils/createSession";
-import { Request } from "express";
-import appLogger from "@subtrack/shared/logging";
-import { thirtyDaysFromNow, twentyFourHours } from "@/shared/constants/dates";
+import prisma from "@/shared/lib/db";
+import AppError, { AppErrorCode } from "@/shared/utils/AppError";
 
 export const handleRegister = async (
   name: string,

@@ -1,10 +1,11 @@
-import prisma from "@/shared/lib/db";
-import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 import type {
   CreateIncomeSchema,
   UpdateIncomeSchema,
 } from "@subtrack/shared/schemas/income";
 import type { Income } from "@subtrack/shared/types/income";
+
+import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
+import prisma from "@/shared/lib/db";
 
 export const getAllIncome = async (userId: string): Promise<Income[]> => {
   const incomes = await prisma.income.findMany({

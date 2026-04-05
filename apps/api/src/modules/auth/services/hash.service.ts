@@ -1,4 +1,4 @@
-import { verify, hash } from "argon2";
+import { hash, verify } from "argon2";
 
 export interface HashService {
   hash(password: string): Promise<string>;

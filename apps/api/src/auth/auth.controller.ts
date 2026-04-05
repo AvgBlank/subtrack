@@ -1,4 +1,4 @@
-import type { RequestHandler } from "express";
+import { CREATED, UNAUTHORIZED } from "@subtrack/shared/httpStatusCodes";
 import {
   authSchema,
   headerSchema,
@@ -6,10 +6,11 @@ import {
   oAuthSchema,
   registerSchema,
 } from "@subtrack/shared/schemas/auth";
+import type { RequestHandler } from "express";
+
 import * as authServices from "@/auth/auth.services";
-import { deleteAuthCookie, setAuthCookie } from "@/shared/utils/cookies";
-import { CREATED, UNAUTHORIZED } from "@subtrack/shared/httpStatusCodes";
 import AppError, { AppErrorCode } from "@/shared/utils/AppError";
+import { deleteAuthCookie, setAuthCookie } from "@/shared/utils/cookies";
 
 export const register: RequestHandler = async (req, res) => {
   // Validate request body and headers

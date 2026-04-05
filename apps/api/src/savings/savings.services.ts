@@ -1,10 +1,11 @@
-import prisma from "@/shared/lib/db";
-import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 import type {
   CreateSavingsGoalSchema,
   UpdateSavingsGoalSchema,
 } from "@subtrack/shared/schemas/savings";
 import type { SavingsGoalWithProgress } from "@subtrack/shared/types/savings";
+
+import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
+import prisma from "@/shared/lib/db";
 
 const calculateStatus = (
   progressPercentage: number,

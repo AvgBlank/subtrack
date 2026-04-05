@@ -1,15 +1,16 @@
-import { UserRepository } from "@/modules/user/user.repository";
-import AppError from "@/shared/utils/AppError";
 import { CONFLICT } from "@subtrack/shared/httpStatusCodes";
+
 import { HashService } from "@/modules/auth/services/hash.service";
-import { SessionService } from "@/modules/auth/services/session.service";
+import { ISessionService } from "@/modules/auth/services/session.service";
 import { TokenService } from "@/modules/auth/services/token.service";
+import { UserRepository } from "@/modules/user/user.repository";
+import AppError from "@/utils/AppError";
 
 class AuthService {
   public constructor(
     private userRepository: UserRepository,
     private hashService: HashService,
-    private sessionService: SessionService,
+    private sessionService: ISessionService,
     private tokenService: TokenService,
   ) {}
 

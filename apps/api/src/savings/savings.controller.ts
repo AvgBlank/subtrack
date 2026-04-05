@@ -1,11 +1,12 @@
-import type { RequestHandler } from "express";
+import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 import {
   createSavingsGoalSchema,
   updateSavingsGoalSchema,
 } from "@subtrack/shared/schemas/savings";
+import type { RequestHandler } from "express";
+
 import * as savingsServices from "@/savings/savings.services";
 import AppError from "@/shared/utils/AppError";
-import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 
 export const getAll: RequestHandler = async (req, res) => {
   const userId = req.user!.id;

@@ -1,12 +1,13 @@
-import type { RequestHandler } from "express";
+import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 import {
   createRecurringSchema,
-  updateRecurringSchema,
   toggleRecurringSchema,
+  updateRecurringSchema,
 } from "@subtrack/shared/schemas/recurring";
+import type { RequestHandler } from "express";
+
 import * as recurringServices from "@/recurring/recurring.services";
 import AppError from "@/shared/utils/AppError";
-import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 
 export const getAll: RequestHandler = async (req, res) => {
   const userId = req.user!.id;

@@ -1,8 +1,10 @@
-import { RequestHandler } from "express";
 import {
   canISpendSchema,
   recurringSummarySchema,
 } from "@subtrack/shared/schemas/summary";
+import { RequestHandler } from "express";
+
+import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 import {
   getCanISpend,
   getCashFlowSummary,
@@ -12,7 +14,6 @@ import {
   getRecurringSummary,
   getSavingsSummary,
 } from "@/summary/summary.services";
-import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 
 export const recurringSummary: RequestHandler = async (req, res) => {
   const userId = req.user!.id;

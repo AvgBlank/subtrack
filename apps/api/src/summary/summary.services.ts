@@ -1,5 +1,4 @@
 import { Decimal } from "@prisma/client/runtime/client";
-import prisma from "@/shared/lib/db";
 import type {
   CashFlowSummary,
   IncomeSummary,
@@ -9,6 +8,8 @@ import type {
   SavingsGoalSummary,
   SavingsSummary,
 } from "@subtrack/shared/types/summary";
+
+import prisma from "@/shared/lib/db";
 import { getDays } from "@/summary/utils/getDays";
 
 export const getRecurringSummary = async (

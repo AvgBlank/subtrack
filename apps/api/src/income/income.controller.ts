@@ -1,12 +1,13 @@
-import type { RequestHandler } from "express";
+import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 import {
   createIncomeSchema,
-  updateIncomeSchema,
   toggleIncomeSchema,
+  updateIncomeSchema,
 } from "@subtrack/shared/schemas/income";
+import type { RequestHandler } from "express";
+
 import * as incomeServices from "@/income/income.services";
 import AppError from "@/shared/utils/AppError";
-import { CREATED, NOT_FOUND, OK } from "@subtrack/shared/httpStatusCodes";
 
 export const getAll: RequestHandler = async (req, res) => {
   const userId = req.user!.id;

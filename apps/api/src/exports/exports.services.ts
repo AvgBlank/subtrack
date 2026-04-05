@@ -1,5 +1,5 @@
-import prisma from "@/shared/lib/db";
 import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
+import prisma from "@/shared/lib/db";
 
 export type ExportType =
   | "monthly-summary"

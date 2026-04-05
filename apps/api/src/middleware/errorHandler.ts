@@ -6,8 +6,8 @@ import appLogger from "@subtrack/shared/logging";
 import { ErrorRequestHandler, Response } from "express";
 import { z } from "zod";
 
-import AppError, { AppErrorCode } from "@/shared/utils/AppError";
-import { deleteAuthCookie } from "@/shared/utils/cookies";
+import AppError, { AppErrorCode } from "@/utils/AppError";
+import { deleteAuthCookie } from "@/utils/cookies";
 
 const handleZodError = (res: Response, err: z.ZodError) => {
   const error = {

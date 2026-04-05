@@ -1,4 +1,4 @@
-import prisma from "@/shared/lib/db";
+import prisma from "@/lib/prisma";
 import { Session } from "@/modules/auth/types/session.types";
 
 export interface SessionRepository {

@@ -3,8 +3,8 @@ import { authSchema } from "@subtrack/shared/schemas/auth";
 import { RequestHandler } from "express";
 
 import { verifyAccessToken } from "@/auth/utils/tokens";
-import prisma from "@/shared/lib/db";
-import AppError, { AppErrorCode } from "@/shared/utils/AppError";
+import prisma from "@/lib/prisma";
+import AppError, { AppErrorCode } from "@/utils/AppError";
 
 const authenticate: RequestHandler = async (req, _res, next) => {
   // Validate Authorization header

@@ -1,10 +1,10 @@
 import { CookieOptions, Response } from "express";
 
-import { thirtyDays, thirtyDaysFromNow } from "@/shared/constants/dates";
-import { NODE_ENV } from "@/shared/constants/env";
+import { thirtyDays, thirtyDaysFromNow } from "@/constants/dates";
+import env from "@/constants/env";
 
-const secure = NODE_ENV === "production";
-const sameSite = NODE_ENV === "production" ? "none" : "lax";
+const secure = env.get("NODE_ENV") === "production";
+const sameSite = env.get("NODE_ENV") === "production" ? "none" : "lax";
 const REFRESH_PATH = "/api/auth/refresh";
 
 const defaults: CookieOptions = {

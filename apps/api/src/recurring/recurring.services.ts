@@ -1,10 +1,11 @@
-import prisma from "@/shared/lib/db";
-import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
 import type {
   CreateRecurringSchema,
   UpdateRecurringSchema,
 } from "@subtrack/shared/schemas/recurring";
 import type { RecurringTransaction } from "@subtrack/shared/types/recurring";
+
+import { Decimal } from "@/generated/prisma/internal/prismaNamespace";
+import prisma from "@/shared/lib/db";
 
 const normalizeToMonthly = (amount: Decimal, frequency: string): number => {
   if (frequency === "DAILY") {

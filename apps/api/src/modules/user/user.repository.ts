@@ -1,5 +1,5 @@
-import { User } from "@/modules/user/user.types";
 import prisma from "@/lib/prisma";
+import { User } from "@/modules/user/user.types";
 
 export interface UserRepository {
   getByEmail(email: string): Promise<User | null>;

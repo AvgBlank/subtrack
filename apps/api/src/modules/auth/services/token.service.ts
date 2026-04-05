@@ -1,12 +1,6 @@
-import {
-  fifteenMinutesFromNow,
-  thirtyDaysFromNow,
-} from "@/shared/constants/dates";
-import {
-  ACCESS_TOKEN_SECRET,
-  REFRESH_TOKEN_SECRET,
-} from "@/shared/constants/env";
 import { JWTPayload, SignJWT } from "jose";
+
+import { fifteenMinutesFromNow, thirtyDaysFromNow } from "@/constants/dates";
 
 interface Payload {
   userId: string;
@@ -26,9 +20,14 @@ export class JoseTokenService implements TokenService {
   private refreshTokenSecret: Uint8Array;
   private accessTokenSecret: Uint8Array;
 
-  public constructor() {
-    this.refreshTokenSecret = new TextEncoder().encode(REFRESH_TOKEN_SECRET);
-    this.accessTokenSecret = new TextEncoder().encode(ACCESS_TOKEN_SECRET);
+  public constructor(
+    refreshTokenSecretString: string,
+    accessTokenSecretString: string,
+  ) {
+    this.refreshTokenSecret = new TextEncoder().encode(
+      refreshTokenSecretString,
+    );
+    this.accessTokenSecret = new TextEncoder().encode(accessTokenSecretString);
   }
 
   private toJWTPayload(payload: Payload): JWTPayload {

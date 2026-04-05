@@ -1,9 +1,10 @@
-import { thirtyDaysFromNow } from "@/shared/constants/dates";
-import prisma from "@/shared/lib/db";
-import { UAParser } from "ua-parser-js";
 import { isIP } from "node:net";
 
 import { Request } from "express";
+import { UAParser } from "ua-parser-js";
+
+import { thirtyDaysFromNow } from "@/shared/constants/dates";
+import prisma from "@/shared/lib/db";
 
 const maskIp = (ip?: string) => {
   if (!ip) return "Unknown";

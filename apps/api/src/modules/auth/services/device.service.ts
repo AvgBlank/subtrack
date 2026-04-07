@@ -1,10 +1,10 @@
 import { UAParser } from "ua-parser-js";
 
-export interface DeviceService {
+export interface IDeviceService {
   parse(userAgent?: string): { browser: string; os: string; device: string };
 }
 
-export class UaParserDeviceService implements DeviceService {
+export class UaParserDeviceService implements IDeviceService {
   public parse(userAgent: string = "Unknown") {
     const parsed = UAParser(userAgent);
     return {

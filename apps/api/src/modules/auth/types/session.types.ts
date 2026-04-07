@@ -1,4 +1,4 @@
-export interface Session {
+export type DBSession = {
   userId: string;
   userAgent: string;
   ipAddress: string;
@@ -7,4 +7,4 @@ export interface Session {
   os: string;
   device: string;
   expiresAt: Date;
-}
+};

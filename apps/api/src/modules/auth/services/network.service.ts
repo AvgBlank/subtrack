@@ -1,11 +1,11 @@
 import { isIP } from "node:net";
 
-export interface NetworkService {
+export interface INetworkService {
   maskIp(ip?: string): string;
   lookupIp(ip?: string): Promise<string>;
 }
 
-export class IpApiNetworkService implements NetworkService {
+export class IpApiNetworkService implements INetworkService {
   public maskIp(ip?: string): string {
     if (!ip) return "Unknown";
     return ip.replace(/\.\d+$/, ".xxx");

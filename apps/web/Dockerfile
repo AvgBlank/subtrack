@@ -4,7 +4,7 @@ FROM oven/bun:1.3.9-alpine AS base
 # Prune using TurboRepo
 FROM base AS pruner
 WORKDIR /app
-RUN bun install -g turbo@2.8.19
+RUN bun install -g turbo@2.8.21
 COPY . .
 RUN turbo prune @subtrack/web --docker
 

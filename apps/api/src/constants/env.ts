@@ -16,26 +16,35 @@ const envSchema = z.object({
 
 type EnvConfig = z.infer<typeof envSchema>;
 
-// Validate environment variables against the schema
-const { success, error, data } = envSchema.safeParse(process.env);
-if (!success) {
-  throw new Error(
-    "Invalid/Missing environment variables" + z.flattenError(error).fieldErrors,
-  );
+export class ValidateEnv {
+  constructor(private readonly data: unknown) {}
+
+  public validate() {
+    const { success, error, data } = envSchema.safeParse(this.data);
+    if (!success) {
+      throw new Error(
+        "Invalid/Missing environment variables" +
+          z.flattenError(error).fieldErrors,
+      );
+    }
+    return data;
+  }
 }
 
 export class EnvService {
   constructor(private readonly config: EnvConfig) {}
 
-  get<K extends keyof EnvConfig>(key: K): EnvConfig[K] {
+  public get<K extends keyof EnvConfig>(key: K): EnvConfig[K] {
     return this.config[key];
   }
 
-  getAll(): EnvConfig {
+  public getAll(): EnvConfig {
     return this.config;
   }
 }
 
+const validator = new ValidateEnv(process.env);
+const data = validator.validate();
 const env = new EnvService(data);
 export default env;
 

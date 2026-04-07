@@ -6,10 +6,10 @@ import express from "express";
 import { EnvService } from "@/constants/env";
 import errorHandler from "@/middleware/errorHandler";
 
-export interface Route {
+export type Route = {
   path: string;
   router: express.Router;
-}
+};
 
 class App {
   private app: express.Application;

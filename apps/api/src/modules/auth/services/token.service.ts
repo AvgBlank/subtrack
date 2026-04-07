@@ -2,13 +2,13 @@ import { JWTPayload, SignJWT } from "jose";
 
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "@/constants/dates";
 
-interface Payload {
+type Payload = {
   userId: string;
   sessionId: string;
   exp?: number;
-}
+};
 
-export interface TokenService {
+export interface ITokenService {
   generateRefreshToken(payload: Payload): Promise<string>;
   generateAccessToken(payload: Payload): Promise<string>;
   generateTokens(
@@ -16,7 +16,7 @@ export interface TokenService {
   ): Promise<{ refreshToken: string; accessToken: string }>;
 }
 
-export class JoseTokenService implements TokenService {
+export class JoseTokenService implements ITokenService {
   private refreshTokenSecret: Uint8Array;
   private accessTokenSecret: Uint8Array;
 

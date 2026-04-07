@@ -1,16 +1,19 @@
 import prisma from "@/lib/prisma";
-import { User } from "@/modules/user/user.types";
+import { DBUser, DBUserWithPassword } from "@/modules/user/user.types";
 
-export interface UserRepository {
-  getByEmail(email: string): Promise<User | null>;
+export interface IUserRepository {
+  getByEmail(email: string): Promise<DBUser | null>;
+  getByEmailWithPassword(email: string): Promise<DBUserWithPassword | null>;
   create(data: {
     name: string;
     email: string;
     password: string | null;
-  }): Promise<User>;
+    picture?: string;
+  }): Promise<DBUser>;
+  updatePicture(userId: string, picture: string): Promise<DBUser>;
 }
 
-export class PrismaUserRepository implements UserRepository {
+export class PrismaUserRepository implements IUserRepository {
   public async getByEmail(email: string) {
     const user = await prisma.user.findUnique({
       where: { email },
@@ -24,6 +27,20 @@ export class PrismaUserRepository implements UserRepository {
     return user;
   }
 
+  public async getByEmailWithPassword(email: string) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: true,
+        picture: true,
+      },
+    });
+    return user;
+  }
+
   public async create(data: {
     name: string;
     email: string;
@@ -31,6 +48,24 @@ export class PrismaUserRepository implements UserRepository {
   }) {
     const user = await prisma.user.create({
       data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        picture: true,
+      },
+    });
+    return user;
+  }
+
+  public async updatePicture(userId: string, picture: string) {
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        picture,
+      },
       select: {
         id: true,
         name: true,

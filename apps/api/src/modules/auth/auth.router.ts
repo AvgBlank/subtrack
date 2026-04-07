@@ -8,6 +8,7 @@ import AuthController from "@/modules/auth/auth.controller";
 import AuthService from "@/modules/auth/auth.service";
 import { PrismaSessionRepository } from "@/modules/auth/repositories/session.repository";
 import { UaParserDeviceService } from "@/modules/auth/services/device.service";
+import { GoogleOAuthService } from "@/modules/auth/services/google.service";
 import { Argon2HashService } from "@/modules/auth/services/hash.service";
 import { IpApiNetworkService } from "@/modules/auth/services/network.service";
 import { SessionService } from "@/modules/auth/services/session.service";
@@ -22,6 +23,11 @@ const sessionRepository = new PrismaSessionRepository();
 const networkService = new IpApiNetworkService();
 const deviceService = new UaParserDeviceService();
 const hashService = new Argon2HashService();
+const googleOAuthService = new GoogleOAuthService(
+  env.get("GOOGLE_CLIENT_ID"),
+  env.get("GOOGLE_CLIENT_SECRET"),
+  env.get("GOOGLE_REDIRECT_URI"),
+);
 const sessionService = new SessionService(
   sessionRepository,
   networkService,
@@ -37,6 +43,7 @@ const authService = new AuthService(
   hashService,
   sessionService,
   tokenService,
+  googleOAuthService,
 );
 
 // Controller
@@ -50,8 +57,8 @@ const limiter = rateLimit({
 const authRouter = Router()
   .use(limiter)
   .post("/register", authController.register)
-  .post("/login", authControllers.login)
-  .post("/google", authControllers.googleOAuth)
+  .post("/login", authController.login)
+  .post("/google", authController.googleOAuth)
   .get("/refresh", authControllers.refresh)
   .get("/verify", authenticate, authControllers.verify)
   .delete("/logout", authControllers.logout);

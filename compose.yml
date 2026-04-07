@@ -91,6 +91,7 @@ services:
         required: false
     environment:
       PORT: 3000
+      NEXT_PUBLIC_API_URL: ""
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=PathPrefix(`/`)"

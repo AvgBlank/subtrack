@@ -86,6 +86,10 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
+      NEXT_PUBLIC_API_URL: ""
+      # OAuth
+      NEXT_PUBLIC_GOOGLE_CLIENT_ID : ${GOOGLE_CLIENT_ID}
+      NEXT_PUBLIC_GOOGLE_CLIENT_REDIRECT_URI : ${GOOGLE_REDIRECT_URI}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.web.rule=PathPrefix(`/`)"

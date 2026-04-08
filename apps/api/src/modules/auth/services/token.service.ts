@@ -1,4 +1,4 @@
-import { JWTPayload, SignJWT } from "jose";
+import { JWTPayload, jwtVerify, SignJWT } from "jose";
 
 import { fifteenMinutesFromNow, thirtyDaysFromNow } from "@/constants/dates";
 
@@ -14,6 +14,8 @@ export interface ITokenService {
   generateTokens(
     payload: Payload,
   ): Promise<{ refreshToken: string; accessToken: string }>;
+  verifyRefreshToken(token?: string): Promise<Payload | null>;
+  verifyAccessToken(token: string): Promise<Payload | null>;
 }
 
 export class JoseTokenService implements ITokenService {
@@ -55,5 +57,29 @@ export class JoseTokenService implements ITokenService {
     const refreshToken = await this.generateRefreshToken(payload);
     const accessToken = await this.generateAccessToken(payload);
     return { refreshToken, accessToken };
+  }
+
+  public async verifyRefreshToken(token?: string) {
+    if (!token) return null;
+
+    try {
+      const { payload } = (await jwtVerify(token, this.refreshTokenSecret)) as {
+        payload: Payload;
+      };
+      return payload;
+    } catch {
+      return null;
+    }
+  }
+
+  public async verifyAccessToken(token: string) {
+    try {
+      const { payload } = (await jwtVerify(token, this.accessTokenSecret)) as {
+        payload: Payload;
+      };
+      return payload;
+    } catch {
+      return null;
+    }
   }
 }

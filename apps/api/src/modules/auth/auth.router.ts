@@ -1,57 +1,18 @@
 import { Router } from "express";
 import rateLimit from "express-rate-limit";
 
-import * as authControllers from "@/auth/auth.controller";
 import env from "@/constants/env";
-import authenticate from "@/middleware/authMiddleware";
-import AuthController from "@/modules/auth/auth.controller";
-import AuthService from "@/modules/auth/auth.service";
-import { PrismaSessionRepository } from "@/modules/auth/repositories/session.repository";
-import { UaParserDeviceService } from "@/modules/auth/services/device.service";
-import { GoogleOAuthService } from "@/modules/auth/services/google.service";
-import { Argon2HashService } from "@/modules/auth/services/hash.service";
-import { IpApiNetworkService } from "@/modules/auth/services/network.service";
-import { SessionService } from "@/modules/auth/services/session.service";
-import { JoseTokenService } from "@/modules/auth/services/token.service";
-import { PrismaUserRepository } from "@/modules/user/user.repository";
+import { createAuthModule } from "@/modules/auth/auth.container";
 
-// Repositories
-const userRepository = new PrismaUserRepository();
-const sessionRepository = new PrismaSessionRepository();
-
-// Services
-const networkService = new IpApiNetworkService();
-const deviceService = new UaParserDeviceService();
-const hashService = new Argon2HashService();
-const googleOAuthService = new GoogleOAuthService(
-  env.get("GOOGLE_CLIENT_ID"),
-  env.get("GOOGLE_CLIENT_SECRET"),
-  env.get("GOOGLE_REDIRECT_URI"),
-);
-const sessionService = new SessionService(
-  sessionRepository,
-  networkService,
-  deviceService,
-);
-const tokenService = new JoseTokenService(
-  env.get("REFRESH_TOKEN_SECRET"),
-  env.get("ACCESS_TOKEN_SECRET"),
-);
-
-const authService = new AuthService(
-  userRepository,
-  hashService,
-  sessionService,
-  tokenService,
-  googleOAuthService,
-);
-
-// Controller
-const authController = new AuthController(authService);
+const { authController, authenticate } = createAuthModule();
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: env.get("NODE_ENV") === "production" ? 20 : 10000,
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: env.get("NODE_ENV") === "production" ? 40 : 10000,
+  message: {
+    error: "Too many requests, please try again later.",
+  },
+  skipSuccessfulRequests: true,
 });
 
 const authRouter = Router()
@@ -59,8 +20,8 @@ const authRouter = Router()
   .post("/register", authController.register)
   .post("/login", authController.login)
   .post("/google", authController.googleOAuth)
-  .get("/refresh", authControllers.refresh)
-  .get("/verify", authenticate, authControllers.verify)
-  .delete("/logout", authControllers.logout);
+  .get("/refresh", authController.refresh)
+  .get("/verify", authenticate, authController.verify)
+  .delete("/logout", authController.logout);
 
 export default authRouter;

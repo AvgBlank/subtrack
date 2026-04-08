@@ -2,9 +2,15 @@ import { UNAUTHORIZED } from "@subtrack/shared/httpStatusCodes";
 import { authSchema } from "@subtrack/shared/schemas/auth";
 import { RequestHandler } from "express";
 
-import { verifyAccessToken } from "@/auth/utils/tokens";
+import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "@/constants/env";
+import { JoseTokenService } from "@/modules/auth/services/token.service";
 import prisma from "@/shared/lib/db";
 import AppError, { AppErrorCode } from "@/shared/utils/AppError";
+
+const tokenService = new JoseTokenService(
+  REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET,
+);
 
 const authenticate: RequestHandler = async (req, _res, next) => {
   // Validate Authorization header
@@ -26,7 +32,7 @@ const authenticate: RequestHandler = async (req, _res, next) => {
   }
 
   // Verify access token
-  const payload = await verifyAccessToken(auth[1]);
+  const payload = await tokenService.verifyAccessToken(auth[1]);
   if (!payload) {
     throw new AppError(
       UNAUTHORIZED,

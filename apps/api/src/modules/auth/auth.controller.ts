@@ -1,14 +1,15 @@
 import { CREATED } from "@subtrack/shared/httpStatusCodes";
 import {
+  authSchema,
   headerSchema,
   loginSchema,
   oAuthSchema,
   registerSchema,
 } from "@subtrack/shared/schemas/auth";
-import type { Request, Response } from "express";
+import type { Request, RequestHandler } from "express";
 
 import { IAuthService } from "@/modules/auth/auth.service";
-import { setAuthCookie } from "@/utils/cookies";
+import { deleteAuthCookie, setAuthCookie } from "@/utils/cookies";
 
 class AuthController {
   public constructor(private authService: IAuthService) {}
@@ -34,7 +35,7 @@ class AuthController {
     );
   };
 
-  public register = async (req: Request, res: Response) => {
+  public register: RequestHandler = async (req, res) => {
     // Validate request body and headers
     const { name, email, password } = registerSchema.parse(req.body);
     const { "user-agent": userAgent } = headerSchema.parse(req.headers);
@@ -56,7 +57,7 @@ class AuthController {
       .json({ message: "Registered successfully", user, accessToken });
   };
 
-  public login = async (req: Request, res: Response) => {
+  public login: RequestHandler = async (req, res) => {
     // Validate request body and headers
     const { email, password } = loginSchema.parse(req.body);
     const { "user-agent": userAgent } = headerSchema.parse(req.headers);
@@ -75,7 +76,7 @@ class AuthController {
     return res.json({ message: "Login successful", user, accessToken });
   };
 
-  public googleOAuth = async (req: Request, res: Response) => {
+  public googleOAuth: RequestHandler = async (req, res) => {
     // Validate code
     const { code } = oAuthSchema.parse(req.body);
     const { "user-agent": userAgent } = headerSchema.parse(req.headers);
@@ -91,6 +92,40 @@ class AuthController {
     // Set cookies & send response
     setAuthCookie(res, refreshToken);
     return res.json({ message: "Login successful", user, accessToken });
+  };
+
+  public refresh: RequestHandler = async (req, res) => {
+    // Fetch refresh token from cookies
+    const refreshToken = req.cookies["refreshToken"];
+
+    // Handle token refresh
+    const { user, newRefreshToken, accessToken } =
+      await this.authService.handleRefresh(refreshToken);
+
+    // Set cookies & send response
+    setAuthCookie(res, newRefreshToken);
+    return res.json({
+      message: "Token refreshed successfully",
+      user,
+      accessToken,
+    });
+  };
+
+  public verify: RequestHandler = async (req, res) => {
+    // Return success because auth middleware
+    return res.json({ user: req.user! });
+  };
+
+  public logout: RequestHandler = async (req, res) => {
+    // Fetch auth token
+    const { authorization } = authSchema.parse(req.headers);
+
+    // Handle logout (invalidate session)
+    await this.authService.handleLogout(authorization);
+
+    // Delete cookies & send response
+    deleteAuthCookie(res);
+    return res.json({ message: "Logged out successfully" });
   };
 }
 

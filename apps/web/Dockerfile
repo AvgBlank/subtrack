@@ -27,19 +27,16 @@ RUN bun run build
 # Runner
 FROM base AS runner
 WORKDIR /app
-# Create a non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # Install production dependencies
 COPY --from=pruner /app/out/json/ .
 RUN bun install --production --frozen-lockfile
 # Copy built files
-COPY --chown=appuser:appgroup --from=builder /app/packages/shared ./packages/shared
-COPY --chown=appuser:appgroup --from=builder /app/apps/web/.next ./apps/web/.next
-COPY --chown=appuser:appgroup --from=builder /app/apps/web/next.config.mjs ./apps/web/next.config.mjs
-COPY --chown=appuser:appgroup --from=builder /app/apps/web/public ./apps/web/public
-# Change user
-USER appuser
+COPY --from=builder /app/packages/shared ./packages/shared
+COPY --from=builder /app/apps/web/.next ./apps/web/.next
+COPY --from=builder /app/apps/web/next.config.mjs ./apps/web/next.config.mjs
+COPY --from=builder /app/apps/web/public ./apps/web/public
 # Start the app
 WORKDIR /app/apps/web
+EXPOSE 3000
 CMD ["bun", "run", "start"]
 

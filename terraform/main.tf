@@ -1,5 +1,14 @@
 terraform {
   required_version = ">= 1.0.0"
+
+  backend "s3" {
+    bucket         = "subtrack-terraform-state"
+    key            = "subtrack/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "subtrack-terraform-locks"
+    encrypt        = true
+  }
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -8,6 +17,7 @@ terraform {
   }
 }
 
+
 provider "aws" {
   region = var.aws_region
 }
@@ -15,7 +25,8 @@ provider "aws" {
 # --- Phase 2: S3 Configuration ---
 
 resource "aws_s3_bucket" "app_bucket" {
-  bucket = "subtrack-app-storage"
+  bucket        = "subtrack-app-storage"
+  force_destroy = true
 }
 
 # Versioning enabled

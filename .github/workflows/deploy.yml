@@ -2,98 +2,33 @@ name: Deploy
 
 permissions:
   contents: read
-  packages: write
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Build"]
     branches: ["main"]
     types:
       - completed
 
 jobs:
-  commit-hash:
+  update-deployment:
+    name: Update deployment
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    outputs:
-      commit_hash: ${{ steps.get_commit.outputs.commit_hash }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ secrets.AWS_REGION }}
 
-      - name: Get commit hash
-        id: get_commit
-        run: echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-
-  build-and-push-web-image:
-    needs:
-      - commit-hash
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Set short git commit SHA
-        id: vars
+      - name: Force new ECS deployment
         run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
+          aws ecs update-service \
+            --cluster subtrack-cluster \
+            --service subtrack-app-service \
+            --force-new-deployment
 
-      - name: Convert the repo name to lowercase
-        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
 
-      - name: Log in to the Container registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Build the Docker image
-      - name: Build and push the Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./apps/web/Dockerfile
-          push: true
-          build-args: |
-            NEXT_PUBLIC_GOOGLE_CLIENT_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-            NEXT_PUBLIC_GOOGLE_REDIRECT_URI=${{ secrets.NEXT_PUBLIC_GOOGLE_REDIRECT_URI }}
-          tags: |
-            ghcr.io/${{ env.REPO_LC }}-web:${{ needs.commit-hash.outputs.commit_hash }}
-            ghcr.io/${{ env.REPO_LC }}-web:latest
-
-  build-and-push-api-image:
-    needs:
-      - commit-hash
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Set short git commit SHA
-        id: vars
-        run: |
-          calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          echo "COMMIT_SHORT_SHA=$calculatedSha" >> $GITHUB_ENV
-
-      - name: Convert the repo name to lowercase
-        run: echo "REPO_LC=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      # Build the Docker image
-      - name: Build and push the Docker image
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./apps/api/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ env.REPO_LC }}-api:${{ needs.commit-hash.outputs.commit_hash }}
-            ghcr.io/${{ env.REPO_LC }}-api:latest

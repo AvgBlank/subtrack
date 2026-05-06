@@ -1,0 +1,62 @@
+name: Infrastructure
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action to perform"
+        required: true
+        default: "apply"
+        type: choice
+        options:
+          - apply
+          - destroy
+
+jobs:
+  terraform:
+    name: "Terraform ${{ github.event.inputs.action }}"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+    env:
+      TF_VAR_postgres:             ${{ secrets.POSTGRES_URL }}
+      TF_VAR_google_client_id:     ${{ secrets.GOOGLE_CLIENT_ID }}
+      TF_VAR_google_client_secret: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+      TF_VAR_google_redirect_uri:  ${{ secrets.GOOGLE_REDIRECT_URI }}
+      TF_VAR_refresh_token_secret: ${{ secrets.REFRESH_TOKEN_SECRET }}
+      TF_VAR_access_token_secret:  ${{ secrets.ACCESS_TOKEN_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token:     ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region:            ${{ secrets.AWS_REGION }}
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        if: github.event.inputs.action != 'destroy'
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: github.event.inputs.action != 'destroy'
+        run: terraform plan
+
+      - name: Terraform Apply
+        if: github.event.inputs.action != 'destroy'
+        run: terraform apply -auto-approve
+
+      - name: Terraform Destroy
+        if: github.event.inputs.action == 'destroy'
+        run: terraform destroy -auto-approve

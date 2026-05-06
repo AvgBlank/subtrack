@@ -5,7 +5,6 @@ import {
   Download,
   FileSpreadsheet,
   Calendar,
-  FileType,
   CheckCircle2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,8 +27,6 @@ type ExportType =
   | "one-time"
   | "income"
   | "full";
-
-type ExportFormat = "csv" | "xlsx";
 
 const MONTHS = [
   { value: 1, label: "January" },
@@ -91,7 +88,6 @@ export default function ExportsPage() {
   const [endMonth, setEndMonth] = useState(now.getMonth() + 1);
   const [endYear, setEndYear] = useState(now.getFullYear());
   const [exportType, setExportType] = useState<ExportType>("monthly-summary");
-  const [format, setFormat] = useState<ExportFormat>("csv");
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {
@@ -123,7 +119,7 @@ export default function ExportsPage() {
             endMonth,
             endYear,
             exportType,
-            format,
+            format: "csv",
           }),
         },
         "blob",
@@ -132,7 +128,7 @@ export default function ExportsPage() {
       // Get filename from Content-Disposition header
       const contentDisposition = response.headers.get("Content-Disposition");
       const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
-      const filename = filenameMatch?.[1] || `export.${format}`;
+      const filename = filenameMatch?.[1] || `export.csv`;
 
       // Download the file
       const url = window.URL.createObjectURL(data);
@@ -305,40 +301,6 @@ export default function ExportsPage() {
                   )}
                 </div>
               ))}
-            </RadioGroup>
-          </div>
-
-          <div className="space-y-3">
-            <Label className="text-base font-medium">Format</Label>
-            <RadioGroup
-              value={format}
-              onValueChange={(v: string) => setFormat(v as ExportFormat)}
-              className="flex gap-4"
-            >
-              <div
-                className={`flex items-center space-x-2 rounded-lg border bg-background/50 px-4 py-2 transition-all ${
-                  format === "csv"
-                    ? "border-cyan-500/50 ring-1 ring-cyan-500/20"
-                    : "border-border/50"
-                }`}
-              >
-                <RadioGroupItem value="csv" id="csv" />
-                <Label htmlFor="csv" className="cursor-pointer">
-                  CSV
-                </Label>
-              </div>
-              <div
-                className={`flex items-center space-x-2 rounded-lg border bg-background/50 px-4 py-2 transition-all ${
-                  format === "xlsx"
-                    ? "border-cyan-500/50 ring-1 ring-cyan-500/20"
-                    : "border-border/50"
-                }`}
-              >
-                <RadioGroupItem value="xlsx" id="xlsx" />
-                <Label htmlFor="xlsx" className="cursor-pointer">
-                  Excel (XLSX)
-                </Label>
-              </div>
             </RadioGroup>
           </div>
 

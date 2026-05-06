@@ -1,13 +1,13 @@
 import { Router } from "express";
 
-import exportsRouter from "@/exports/exports.router";
 import healthRouter from "@/health/health.router";
-import incomeRouter from "@/income/income.router";
 import authRouter from "@/modules/auth/auth.router";
-import oneTimeRouter from "@/one-time/one-time.router";
-import recurringRouter from "@/recurring/recurring.router";
-import savingsRouter from "@/savings/savings.router";
-import summaryRouter from "@/summary/summary.router";
+import exportsRouter from "@/modules/exports/exports.router";
+import incomeRouter from "@/modules/income/income.router";
+import oneTimeRouter from "@/modules/one-time/one-time.router";
+import recurringRouter from "@/modules/recurring/recurring.router";
+import savingsRouter from "@/modules/savings/savings.router";
+import summaryRouter from "@/modules/summary/summary.router";
 
 const router = Router()
   .use("/", healthRouter)

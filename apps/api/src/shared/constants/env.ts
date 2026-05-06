@@ -4,7 +4,6 @@ import { z } from "zod";
 const envSchema = z.object({
   NODE_ENV: z.string().prefault("development"),
   PORT: z.coerce.number().int().prefault(8080),
-  APP_ORIGIN: z.url().prefault("http://localhost:3000"),
   DATABASE_URL: z.string().min(1),
   REFRESH_TOKEN_SECRET: z.string(),
   ACCESS_TOKEN_SECRET: z.string(),
@@ -27,7 +26,6 @@ if (!success) {
 export const {
   NODE_ENV,
   PORT,
-  APP_ORIGIN,
   DATABASE_URL,
   REFRESH_TOKEN_SECRET,
   ACCESS_TOKEN_SECRET,

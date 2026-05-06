@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import { APP_ORIGIN } from "@/shared/constants/env";
 import errorHandler from "@/shared/middleware/errorHandler";
 import healthRouter from "@/health/health.router";
 import authRouter from "@/auth/auth.router";
@@ -16,12 +15,7 @@ import exportsRouter from "@/exports/exports.router";
 const app = express();
 
 // Configure Express
-app.use(
-  cors({
-    origin: APP_ORIGIN,
-    credentials: true,
-  }),
-);
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 app.set("trust proxy", 1);

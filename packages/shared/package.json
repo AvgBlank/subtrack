@@ -19,7 +19,7 @@
     "@subtrack/eslint-config": "workspace:*",
     "@subtrack/typescript-config": "workspace:*",
     "@types/bun": "^1.3.11",
-    "eslint": "^9.39.4",
+    "eslint": "^10.2.0",
     "prettier": "^3.8.1",
     "typescript": "^5.9.3"
   },

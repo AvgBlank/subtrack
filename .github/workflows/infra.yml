@@ -30,7 +30,7 @@ jobs:
       TF_VAR_refresh_token_secret: ${{ secrets.REFRESH_TOKEN_SECRET }}
       TF_VAR_access_token_secret:  ${{ secrets.ACCESS_TOKEN_SECRET }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
